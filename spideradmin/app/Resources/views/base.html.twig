@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        
+        {% block navbarr %}
+        {% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, inverse: true, id: 'navbar-example' } %}
+            {% block brand %}
+                <a class="navbar-brand" href="{{ path('default_homepage') }}">Mopa Bootstrap</a>
+            {% endblock %}
+
+            {% block menu %}
+                {{ mopa_bootstrap_menu('EbayAdminBundle:Builder:createMainMenu') }}
+                {{ mopa_bootstrap_menu('main', {'automenu': 'navbar', 'pull-right': true}) }}
+            {% endblock %}
+        {% endembed %}
+        {% endblock %}
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

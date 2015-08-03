@@ -1,0 +1,4 @@
+ebay_admin:
+    resource: "@EbayAdminBundle/Controller/"
+    type:     annotation
+    prefix:   /

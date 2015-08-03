@@ -1,0 +1,26 @@
+{% extends 'MopaBootstrapBundle::base_sass.html.twig' %}
+
+{% block navbarr %}
+{% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, inverse: true, id: 'navbar-example' } %}
+    {% block brand %}
+        <a class="navbar-brand" href="{{ path('mopa_bootstrap_welcome') }}">Mopa Bootstrap</a>
+    {% endblock %}
+
+    {% block menu %}       
+        {{ mopa_bootstrap_menu('main', {'automenu': 'navbar', 'pull-right': true}) }}
+    {% endblock %}
+{% endembed %}
+
+
+
+
+{% endblock %}
+
+{% block brand %}
+     myBot Data
+{% endblock %}
+
+{% block body %}
+    I am body
+ 
+{% endblock %}

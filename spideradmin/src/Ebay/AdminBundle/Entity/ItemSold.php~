@@ -1,0 +1,67 @@
+<?php
+
+namespace Ebay\AdminBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ItemSold
+ *
+ * @ORM\Table(name="item_sold", indexes={@ORM\Index(name="ebay_id", columns={"ebay_id"}), @ORM\Index(name="item_id", columns={"item_id"})})
+ * @ORM\Entity
+ */
+class ItemSold
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="item_id", type="integer", nullable=true)
+     */
+    private $itemId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ebay_id", type="string", length=255, nullable=true)
+     */
+    private $ebayId;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $price;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     */
+    private $quantity;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_at", type="datetime", nullable=true)
+     */
+    private $dateAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+
+}
