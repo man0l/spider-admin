@@ -44,10 +44,11 @@ class ItemController extends Controller
         
         if($request->query->has('sort'))            
         {
-            $sql .= " ORDER BY i.".$request->query->get('sort'). "+0 ";
+            $sql .= sprintf(" ORDER BY %s ", $request->query->get('sort'));
             $sql .= ($request->query->get('direction') == 'asc' ? 'ASC' : 'DESC');
-        }
+        }  
         
+       
         $stmt = $conn->prepare($sql);
           
          
