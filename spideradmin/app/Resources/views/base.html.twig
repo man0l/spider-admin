@@ -3,24 +3,51 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            {% stylesheets "bootstrap-sass/bootstrap-sass-3.3.5/assets/stylesheets/*" filter="scss" filter="uglifycss"  %}
+                 <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+            {% stylesheets "source/less/tablesorter/*" filter="less" filter="uglifycss" %}
+                 <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
+        
+        {% block head_javascripts %}
+            
+             {% javascripts
+                 "source/js/jquery-2.1.4.js"
+                 "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap.min.js"
+                 "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap-sprockets.js"
+                 "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap/*"                 
+                 "source/js/jquery.tablesorter.min.js"
+             filter="uglifyjs" %}
+                <script src="{{ asset_url }}"></script>
+             {% endjavascripts %}
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         
         {% block navbarr %}
-        {% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, inverse: true, id: 'navbar-example' } %}
+        {% embed 'Navbar/navbar.html.twig' with { fixedTop: true, inverse: true, id: 'navbar-example' } %}
             {% block brand %}
-                <a class="navbar-brand" href="{{ path('default_homepage') }}">Mopa Bootstrap</a>
+                <a class="navbar-brand" href="{{ path('default_homepage') }}">Spider Admin</a>
             {% endblock %}
 
             {% block menu %}
-                {{ mopa_bootstrap_menu('EbayAdminBundle:Builder:createMainMenu') }}
-                {{ mopa_bootstrap_menu('main', {'automenu': 'navbar', 'pull-right': true}) }}
+                {{ knp_menu_render('EbayAdminBundle:Builder:createMainMenu') }}
+                {{ knp_menu_render('main', {'automenu': 'navbar', 'pull-right': true}) }}
             {% endblock %}
+          
         {% endembed %}
+        
+          
+        
         {% endblock %}
+        <div class="container">
         {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -1,0 +1,16 @@
+<table class="table tablesorter">
+    <thead>
+        <tr>
+            <th>Price</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for itemSold in results %}
+        <tr>
+            <td>${{ itemSold.price }} </td>
+            <td>{{ itemSold.dateAt | date('j M y') }} </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

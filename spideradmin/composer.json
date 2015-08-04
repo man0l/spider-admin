@@ -20,11 +20,8 @@
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
-        "mopa/bootstrap-bundle": "v3.0.0-rc1",
-        "twbs/bootstrap": "~3.3.0",
         "knplabs/knp-paginator-bundle": "~2.4.2",
         "knplabs/knp-menu-bundle":"~2",
-        "twbs/bootstrap-sass": "~3.3.5",
         "twig/extensions": "^1.2"
 
     },

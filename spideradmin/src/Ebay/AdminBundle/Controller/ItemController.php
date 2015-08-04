@@ -34,13 +34,37 @@ class ItemController extends Controller
         $sql = "           
                 SELECT i.*, COUNT(iss.id) as sold FROM item i 
                 LEFT JOIN item_sold iss ON i.id = iss.item_id
-                
-                WHERE i.ASIN != ''
-                GROUP BY iss.item_id
-                
-
             ";
         
+        $where = array('i.ASIN != ""');
+        $having = array(); 
+       
+        $params = array();
+        
+        if($request->query->get('price'))
+        {
+            $where['price'] = " i.price > :price";
+            $params["price"] = $request->query->get('price');
+        }
+        
+        if($request->query->get('sold'))
+        {
+            $having['sold'] = " sold > :sold";
+            $params["sold"] = $request->query->get('sold');
+        }
+        
+        
+        if(count($where) > 0)
+        {
+            $sql .=  sprintf(" WHERE %s",implode(" AND ", $where));
+        }
+        
+        $sql .= " GROUP BY iss.item_id";
+        
+         if(count($having))
+        {
+            $sql .= sprintf(" HAVING %s", implode(" AND ", $having));
+        }
         
         if($request->query->has('sort'))            
         {
@@ -54,6 +78,15 @@ class ItemController extends Controller
          
         //$stmt->bindValue("offset", $itemsPerPage * $page);
         //$stmt->bindValue("limit", $itemsPerPage);        
+        
+        if(count($params))
+        {
+            foreach($params as $name => $value)
+            {
+                $stmt->bindValue($name, $value);
+            }
+        }
+        
         $stmt->execute();                
         
         $results = $stmt->fetchAll();
@@ -89,5 +122,18 @@ class ItemController extends Controller
         return array(
             'entity'      => $entity,
         );
+    }
+    
+    
+    /**
+     * @Route("/sold-modal/{id}", name="sold_modal")
+     * @Template()
+     */
+    public function modalAction($id) {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $rep = $em->getRepository('EbayAdminBundle:ItemSold');
+        $results = $rep->findBy(array('itemId' => $id), array('dateAt' => 'desc'));
+        
+        return array('results' => $results);
     }
 }

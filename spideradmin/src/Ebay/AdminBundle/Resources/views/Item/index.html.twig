@@ -1,61 +1,137 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Item list</h1>
-    <div class="count">
-        Total items: {{ pagination.getTotalItemCount }}
+<div class="row">    
+    <div class=".col-xs-12 .col-md-8">
+        <h1>Item list</h1>
+
+        <div class="filter_form">
+            <form action="{{ path('admin_item')}}" method="get" id="filter_form">
+                <div>
+                    <label>price &gt; $<input type="number" placeholder="100" name="price" step="0.1" value="{{ app.request.get('price') }}" /></label>    <label>sold &gt; <input type="number" placeholder="20" name="sold" value="{{ app.request.get('sold') }}" /></label>
+                    <input type="submit" name="submit_form" value="filter"  />
+                    <input type="submit" name="reset_form" id="reset_form" value="reset" onclick="var f = document.getElementById('filter_form'); f.reset(); return false;" />
+                </div>
+
+
+            </form>        
+        </div>
     </div>
-    
-     <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
-    
-    <table class="records_list">
-        <thead>
-            <tr>
-                 
-                <th>eBay ID</th>
-                <th>Upc</th>
-                <th>Item Specs</th>
-                 
-                <th>{{ knp_pagination_sortable(pagination, 'Price', 'price') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Sold', 'sold') }} </th>
-                {# <th>Category</th> #}
-                <th>Asin</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Created At', 'created_at') }}</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in pagination %}
-            <tr {% if loop.index is odd %}class="odd"{% endif %}>
-                {# <td><a href="{{ path('admin_item_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
-                <td><a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a></td>
-                <td>{{ entity.upc }}</td>
-                <td>{% if entity.mpn %}MPN: {{ entity.mpn }} {% endif %} <br />
-                    {% if entity.brand %}Brand: {{ entity.brand }} {% endif %} <br />
-                    {% if entity.ean %}Ean: {{ entity.ean }} {% endif %}
-                </td>
-                
-                <td>${{ entity.price }}</td>
-                <td>{{ entity.sold }} </td>
-                {# <td>{{ entity.category }}</td> #}
-                <td>{{ entity.asin | split_asin | raw }}</td>
-                <td>{% if entity.created_at %}{{ entity.created_at|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('admin_item_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+</div>
+<div class="row">
+           
+  <div class=".col-xs-12 .col-md-8">        
         
+    
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">Total Items: {{ pagination.getTotalItemCount }}</div>
+        <table class="table">
+            <thead>
+                <tr>
 
-    {% endblock %}
+                    <th>eBay ID</th>
+                    <th>Upc</th>
+                    <th>Item Specs</th>
+
+                    <th>{{ knp_pagination_sortable(pagination, 'Price', 'price') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Sold', 'sold') }} </th>
+                    {# <th>Category</th> #}
+                    <th>Asin</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'Created At', 'created_at') }}</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in pagination %}
+                <tr {% if loop.index is odd %}class="odd"{% endif %}>
+                    {# <td><a href="{{ path('admin_item_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
+                    <td><a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a></td>
+                    <td>{{ entity.upc }}</td>
+                    <td>{% if entity.mpn %}MPN: {{ entity.mpn }} {% endif %} <br />
+                        {% if entity.brand %}Brand: {{ entity.brand }} {% endif %} <br />
+                        {% if entity.ean %}Ean: {{ entity.ean }} {% endif %}
+                    </td>
+
+                    <td>${{ entity.price }}</td>
+                    <td><a data-id="{{ entity.id }}" href="{{ path('sold_modal', { 'id': entity.id } ) }}" class="item_sold">{{ entity.sold }}</a></td>
+                    {# <td>{{ entity.category }}</td> #}
+                    <td>{{ entity.asin | split_asin | raw }}</td>
+                    <td>{% if entity.created_at %}{{ entity.created_at|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('admin_item_show', { 'id': entity.id }) }}">show</a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        
+  </div>
+</div>
+
+    <div class="row">
+
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+        <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">Items Sold</h4>
+
+            </div>
+            <div class="modal-body"><div class="te"></div></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+        
+{% endblock %}
+    
+    
+{% block javascripts %} 
+    <script type="text/javascript">
+        
+        $(document).ready(function(){
+            
+            $(".item_sold").click(function(e) {                
+                var url = $(this).attr('href');
+                $("#myModal").modal('show');
+                debugger;
+                $("#myModal").find(".modal-body").load(url, function() {
+                    $(this).find('table').tablesorter();       
+                }) 
+                return false;
+            });          
+           
+           
+            $("#reset_form").click(function() {
+                $('#filter_form').reset();
+                return false;
+            });
+        
+        });
+        
+         
+
+    </script>
+{% endblock %}
