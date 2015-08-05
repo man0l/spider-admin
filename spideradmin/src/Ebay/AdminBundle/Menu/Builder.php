@@ -10,15 +10,16 @@ class Builder
     public function createMainMenu(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root', array(
-            'navbar' => true,
+            'navbar' => true,           
         ));
-
-        $layout = $menu->addChild('Layout', array(
-            'icon' => 'home',
-            'route' => 'default_homepage',
-        ));
-
         
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+
+        $layout = $menu->addChild('Items list', array(
+            'icon' => 'home',
+            'route' => 'admin_item',
+        ));
+ 
 
         return $menu;
     }

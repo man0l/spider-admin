@@ -42,8 +42,13 @@ assetic:
     use_controller: false
     #bundles:        [ ]
     #java: /usr/bin/java
+    node: /usr/bin/node
+    node_paths: [/usr/lib/node_modules]
     filters:
         less: ~
+        #less:
+        #    bin: /usr/bin/less
+        #    apply_to: "\.less$"
         cssrewrite: ~
         sass:
             bin: /usr/local/bin/sass

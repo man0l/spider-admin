@@ -1,31 +1,49 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-<div class="row">    
-    <div class=".col-xs-12 .col-md-8">
+<div class="row">   
+    <div class="col-xs-12 col-md-12">
+        
         <h1>Item list</h1>
 
-        <div class="filter_form">
-            <form action="{{ path('admin_item')}}" method="get" id="filter_form">
-                <div>
-                    <label>price &gt; $<input type="number" placeholder="100" name="price" step="0.1" value="{{ app.request.get('price') }}" /></label>    <label>sold &gt; <input type="number" placeholder="20" name="sold" value="{{ app.request.get('sold') }}" /></label>
-                    <input type="submit" name="submit_form" value="filter"  />
-                    <input type="submit" name="reset_form" id="reset_form" value="reset" onclick="var f = document.getElementById('filter_form'); f.reset(); return false;" />
+        <div class="filter_form col-xs-8 col-md-9">
+            <form action="{{ path('admin_item', app.request.query.all )}}" method="get" id="filter_form" class="form-inline" role="form">
+                <div class="form-group">
+                    <label for="price">price &gt;</label> <input type="number" placeholder="$100" name="price" class="form-control" step="0.1" value="{{ app.request.get('price') }}" />
+                    
                 </div>
+                    
+                <div class="form-group">
+                    <label for="sold">sold &gt; </label><input type="number" placeholder="20" name="sold" class="form-control"  value="{{ app.request.get('sold') }}" />
+                </div>
+                
+                 
+                <div class="checkbox">
+                    <label><input type="checkbox" value="1" name="has_main_asin" {% if app.request.get('has_main_asin') %}checked="checked"{% endif %}> has main asin</label>
+                </div>
+                
+                <div class="checkbox">
+                    <label><input type="checkbox" value="1" name="has_asin" {% if app.request.get('has_asin') %}checked="checked"{% endif %}> has asin</label>
+                </div>
+ 
+ 
+                <input type="submit" name="submit_form" value="filter"  />
+                <input type="submit" name="reset_form" id="reset_form" value="reset" />
 
 
             </form>        
         </div>
+        <div class="col-xs-4 col-md-1">
+            {{ block('items_per_page') }}
+        </div>
     </div>
+   
 </div>
 <div class="row">
            
-  <div class=".col-xs-12 .col-md-8">        
-        
-    
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
+  <div class="col-xs-12 col-md-12">        
+     
+      {{ block('pagination') }}       
     
     <div class="panel panel-default">
         <div class="panel-heading">Total Items: {{ pagination.getTotalItemCount }}</div>
@@ -42,14 +60,19 @@
                     {# <th>Category</th> #}
                     <th>Asin</th>
                     <th>{{ knp_pagination_sortable(pagination, 'Created At', 'created_at') }}</th>
-                    <th>Actions</th>
+                    <th>Choose main ASIN</th>
                 </tr>
             </thead>
             <tbody>
             {% for entity in pagination %}
                 <tr {% if loop.index is odd %}class="odd"{% endif %}>
                     {# <td><a href="{{ path('admin_item_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
-                    <td><a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a></td>
+                    <td>
+                        <a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a>
+                        <br /><br />
+                        <a href="{{ path('item_preview', { "id": entity.id } ) }}" class="item_preview">preview <span class="gitem_previewlyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+                        
+                    </td>
                     <td>{{ entity.upc }}</td>
                     <td>{% if entity.mpn %}MPN: {{ entity.mpn }} {% endif %} <br />
                         {% if entity.brand %}Brand: {{ entity.brand }} {% endif %} <br />
@@ -62,11 +85,7 @@
                     <td>{{ entity.asin | split_asin | raw }}</td>
                     <td>{% if entity.created_at %}{{ entity.created_at|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('admin_item_show', { 'id': entity.id }) }}">show</a>
-                        </li>
-                    </ul>
+                        {{ entity.asin | asin_options(entity.id) | raw }}
                     </td>
                 </tr>
             {% endfor %}
@@ -78,10 +97,7 @@
 </div>
 
     <div class="row">
-
-        <div class="navigation">
-            {{ knp_pagination_render(pagination) }}
-        </div>
+        {{ block('pagination') }}
     </div>
 
         <!-- Modal -->
@@ -90,7 +106,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h4 class="modal-title">Items Sold</h4>
+                 <h4 class="modal-title"></h4>
 
             </div>
             <div class="modal-body"><div class="te"></div></div>
@@ -113,25 +129,71 @@
         
         $(document).ready(function(){
             
-            $(".item_sold").click(function(e) {                
+            $(".item_sold, .item_preview").click(function(e) {                
                 var url = $(this).attr('href');
+                var itemClass = $(this).attr('class');
+                
                 $("#myModal").modal('show');
-                debugger;
+                
                 $("#myModal").find(".modal-body").load(url, function() {
-                    $(this).find('table').tablesorter();       
+                    
+                    if( itemClass == 'item_sold' )
+                    {
+                        $("#myModal").find('.modal-title').text("Items Sold");
+                        $(this).find('table').tablesorter();       
+                        
+                    } else if (itemClass == 'item_preview')
+                    {
+                        $("#myModal").find('.modal-title').text("Preview Item");
+                    }
                 }) 
                 return false;
             });          
            
            
             $("#reset_form").click(function() {
-                $('#filter_form').reset();
+                $('#filter_form')[0].reset();
+                $("#filter_form input[type=checkbox]").attr('checked', false);
                 return false;
             });
+            
+            
+            $("select[name^=asin_options]").change(function() {
+                var id = $(this).data('id');
+                var val = $(this).val();
+                
+                $.post("{{ path('main_asin') }}", { 'id': id, 'asin': val }, function(data) {
+                    
+                })
+            });
+            
+              $("select[name^=show_items]").change(function() {
+                  $("#items_per_page").submit();
+              });
         
         });
         
          
 
     </script>
+{% endblock %}
+
+{% block pagination %}
+    
+    <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+
+{% block items_per_page %}
+         <form class="form-inline pull-right" id="items_per_page" role="form" method="get" action="{{ path('admin_item',  app.request.query.all ) }}">
+             <div class="form-group">
+                <select name="show_items" class="form-control">
+                    <option {% if app.request.query.get('show_items') == '20' %}{% endif %}>20</option>
+                    <option {% if app.request.query.get('show_items') == '50' %}{% endif %}>50</option>
+                    <option {% if app.request.query.get('show_items') == '100' %}{% endif %}>100</option>
+                    <option {% if app.request.query.get('show_items') == '500' %}{% endif %}>500</option>
+                </select>
+             </div>
+         </form>
 {% endblock %}

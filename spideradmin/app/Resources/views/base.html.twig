@@ -4,10 +4,10 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
-            {% stylesheets "bootstrap-sass/bootstrap-sass-3.3.5/assets/stylesheets/*" filter="scss" filter="uglifycss"  %}
+            {% stylesheets "bootstrap-sass/bootstrap-sass-3.3.5/assets/stylesheets/*" filter="scss" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
-            {% stylesheets "source/less/tablesorter/*" filter="less" filter="uglifycss" %}
+            {% stylesheets "source/less/tablesorter/*" filter="less" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
         {% endblock %}
@@ -29,15 +29,16 @@
     </head>
     <body>
         
-        {% block navbarr %}
-        {% embed 'Navbar/navbar.html.twig' with { fixedTop: true, inverse: true, id: 'navbar-example' } %}
+        {% block navbar %}
+        {% embed 'Navbar/navbar.html.twig' with { fixedTop: false, inverse: false, id: 'navbar-example' } %}
             {% block brand %}
                 <a class="navbar-brand" href="{{ path('default_homepage') }}">Spider Admin</a>
             {% endblock %}
 
             {% block menu %}
-                {{ knp_menu_render('EbayAdminBundle:Builder:createMainMenu') }}
-                {{ knp_menu_render('main', {'automenu': 'navbar', 'pull-right': true}) }}
+          
+
+                {{ knp_menu_render('main', { 'class': 'nav navbar-nav' }) }}
             {% endblock %}
           
         {% endembed %}

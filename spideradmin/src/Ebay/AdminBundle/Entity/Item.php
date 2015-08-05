@@ -98,6 +98,27 @@ class Item
      */
     private $createdAt;
 
+    /**
+     *
+     * @var type 
+     * @ORM\Column(name="image", type="text", nullable=true)
+     */
+    private $image;
+    
+   /**
+    *
+    * @var type 
+    * @ORM\Column(name="title", type="text", nullable=true)
+    */
+    private $title;
+    
+    /**
+     *
+     * @var type 
+     * @ORM\Column(name="main_asin", type="string", length=255, nullable=true)
+     */
+    private $mainASIN;
+    
 
 
     /**
@@ -361,5 +382,74 @@ class Item
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     * @return Item
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string 
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Item
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set mainASIN
+     *
+     * @param string $mainASIN
+     * @return Item
+     */
+    public function setMainASIN($mainASIN)
+    {
+        $this->mainASIN = $mainASIN;
+
+        return $this;
+    }
+
+    /**
+     * Get mainASIN
+     *
+     * @return string 
+     */
+    public function getMainASIN()
+    {
+        return $this->mainASIN;
     }
 }

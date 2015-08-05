@@ -9,11 +9,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ebay\AdminBundle\Entity\Item;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Item controller.
  *
- * @Route("/admin/item")
+ * @Route("/admin/item", name="admin_item")
  */
 class ItemController extends Controller
 {
@@ -36,7 +37,7 @@ class ItemController extends Controller
                 LEFT JOIN item_sold iss ON i.id = iss.item_id
             ";
         
-        $where = array('i.ASIN != ""');
+        $where = array();
         $having = array(); 
        
         $params = array();
@@ -53,13 +54,22 @@ class ItemController extends Controller
             $params["sold"] = $request->query->get('sold');
         }
         
+        if($request->query->get('has_main_asin'))
+        {
+            $where['main_asin'] = "i.main_asin != ''";
+        }
+        
+        if($request->query->get('has_asin'))
+        {
+            $where['has_asin'] ='i.ASIN != ""';
+        }
         
         if(count($where) > 0)
         {
             $sql .=  sprintf(" WHERE %s",implode(" AND ", $where));
         }
         
-        $sql .= " GROUP BY iss.item_id";
+        $sql .= " GROUP BY i.id";
         
          if(count($having))
         {
@@ -85,6 +95,11 @@ class ItemController extends Controller
             {
                 $stmt->bindValue($name, $value);
             }
+        }
+        
+        if($request->query->get('show_items'))
+        {
+            $itemsPerPage = $request->query->get('show_items');
         }
         
         $stmt->execute();                
@@ -136,4 +151,42 @@ class ItemController extends Controller
         
         return array('results' => $results);
     }
+    
+    /**
+     * @Route("/preview/{id}", name="item_preview")
+     * @Template()
+     */
+    public function previewAction($id) 
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $rep = $em->getRepository('EbayAdminBundle:Item');
+        
+        $item = $rep->find($id);
+        
+        return array('item' => $item);
+    }
+    
+    /**
+     * @Route("/main-asin", name="main_asin")
+     * 
+     */
+    public function mainASIN(Request $request)
+    {
+        
+        $id = $request->request->get('id');
+        $asin = $request->request->get('asin');
+        
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $rep = $em->getRepository('EbayAdminBundle:Item');
+        
+        $item = $rep->find($id);
+        
+        $item->setMainAsin($asin);
+        
+        $em->persist($item);
+        $em->flush();
+
+        return new Response('[{"updated": true }]');
+    }
+    
 }

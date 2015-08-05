@@ -64,4 +64,152 @@ class ItemSold
     private $createdAt;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set itemId
+     *
+     * @param integer $itemId
+     * @return ItemSold
+     */
+    public function setItemId($itemId)
+    {
+        $this->itemId = $itemId;
+
+        return $this;
+    }
+
+    /**
+     * Get itemId
+     *
+     * @return integer 
+     */
+    public function getItemId()
+    {
+        return $this->itemId;
+    }
+
+    /**
+     * Set ebayId
+     *
+     * @param string $ebayId
+     * @return ItemSold
+     */
+    public function setEbayId($ebayId)
+    {
+        $this->ebayId = $ebayId;
+
+        return $this;
+    }
+
+    /**
+     * Get ebayId
+     *
+     * @return string 
+     */
+    public function getEbayId()
+    {
+        return $this->ebayId;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     * @return ItemSold
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float 
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set quantity
+     *
+     * @param integer $quantity
+     * @return ItemSold
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity
+     *
+     * @return integer 
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Set dateAt
+     *
+     * @param \DateTime $dateAt
+     * @return ItemSold
+     */
+    public function setDateAt($dateAt)
+    {
+        $this->dateAt = $dateAt;
+
+        return $this;
+    }
+
+    /**
+     * Get dateAt
+     *
+     * @return \DateTime 
+     */
+    public function getDateAt()
+    {
+        return $this->dateAt;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return ItemSold
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 }
