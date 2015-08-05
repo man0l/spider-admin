@@ -52,8 +52,7 @@ class AsinExtension extends \Twig_Extension
             foreach($asins[0] as $a)
             {
                 
-                
-                $output .= sprintf($format, $a, );               
+                $output .= sprintf($format, $a);               
                 
             }
         } else {
