@@ -46,6 +46,7 @@
     
     <div class="panel panel-default">
         <div class="panel-heading">Total Items: {{ pagination.getTotalItemCount }}</div>
+        <form id="container_checkbox" action="" method="POST">
         <table class="table">
             <thead>
                 <tr>
@@ -93,6 +94,7 @@
             {% endfor %}
             </tbody>
         </table>
+        </form>
     </div>
         
   </div>
@@ -105,10 +107,10 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-               <li><a href="#"><span class="glyphicon glyphicon-bitcoin"></span> Update Amazon Price &amp; Info</a></li>
-               <li><a href="#"><span class="glyphicon glyphicon-export"></span> Export in FileExchange</a></li>
-               <li><a href="#"><span class="glyphicon glyphicon-export"></span> Export in Bonanza</a></li>
-               <li><a href="#" id="add_tags_link"><span class="glyphicon glyphicon-tags"></span> Add tags</a></li>
+               <li><a href="javascript:;" id="update_amazon"><span class="glyphicon glyphicon-bitcoin"></span> Update Amazon Price &amp; Info</a></li>
+               <li><a href="javascript:;"><span class="glyphicon glyphicon-export"></span> Export in FileExchange</a></li>
+               <li><a href="javascript:;"><span class="glyphicon glyphicon-export"></span> Export in Bonanza</a></li>
+               <li><a href="javascript:;" id="add_tags_link"><span class="glyphicon glyphicon-tags"></span> Add tags</a></li>
 
            </ul>
         </div>
@@ -209,6 +211,26 @@
             $(".dropdown-menu li a").click(function() {
                  
                 $(".add_tags").addClass('hide');
+            });
+            
+            $("#update_amazon").click(function() {
+                
+               $.ajax({
+                   url: "{{ path('update_amazon') }}",
+                   data: $("#container_checkbox").serialize(),
+                   method: "POST",
+                   success: function(data) {
+                         $(".dropdown").find('.glyphicon-refresh').remove();                                        
+                         $(".dropdown").append($("<span>").attr('class', 'glyphicon glyphicon-ok'));
+
+                   },
+                    beforeSend: function() {
+                         $(".dropdown").find('.glyphicon-ok').remove();
+                         var $icon = $("<span>").addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate');                                        
+                         $(".dropdown").append($icon);                                        
+                   }
+                    
+               });
             });
             
             $("#add_tags_link").click(function() {                 
