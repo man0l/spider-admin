@@ -25,8 +25,7 @@
                 <div class="checkbox">
                     <label><input type="checkbox" value="1" name="has_asin" {% if app.request.get('has_asin') %}checked="checked"{% endif %}> has asin</label>
                 </div>
- 
- 
+                
                 <input type="submit" name="submit_form" value="filter"  />
                 <input type="submit" name="reset_form" id="reset_form" value="reset" />
 
@@ -50,7 +49,7 @@
         <table class="table">
             <thead>
                 <tr>
-
+                    <th><input name="check_all" id="check_all" type="checkbox" value="1"></th>
                     <th>eBay ID</th>
                     <th>Upc</th>
                     <th>Item Specs</th>
@@ -68,9 +67,12 @@
                 <tr {% if loop.index is odd %}class="odd"{% endif %}>
                     {# <td><a href="{{ path('admin_item_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
                     <td>
+                        <input name="check[]" id="check_{{ entity.id }}" class="checkbox_check" type="checkbox" value="{{ entity.id }}">
+                    </td>
+                    <td>
                         <a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a>
                         <br /><br />
-                        <a href="{{ path('item_preview', { "id": entity.id } ) }}" class="item_preview">preview <span class="gitem_previewlyphicon glyphicon-new-window" aria-hidden="true"></span></a>
+                        <a href="{{ path('item_preview', { "id": entity.id } ) }}" class="item_preview">preview <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
                         
                     </td>
                     <td>{{ entity.upc }}</td>
@@ -85,7 +87,7 @@
                     <td>{{ entity.asin | split_asin | raw }}</td>
                     <td>{% if entity.created_at %}{{ entity.created_at|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>
-                        {{ entity.asin | asin_options(entity.id) | raw }}
+                        {{ entity.asin | asin_options(entity.id, entity.main_asin) | raw }}
                     </td>
                 </tr>
             {% endfor %}
@@ -95,7 +97,32 @@
         
   </div>
 </div>
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="dropdown col-xs-6 col-md-2 pull-left" >
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Action for selected items
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+               <li><a href="#"><span class="glyphicon glyphicon-bitcoin"></span> Update Amazon Price &amp; Info</a></li>
+               <li><a href="#"><span class="glyphicon glyphicon-export"></span> Export in FileExchange</a></li>
+               <li><a href="#"><span class="glyphicon glyphicon-export"></span> Export in Bonanza</a></li>
+               <li><a href="#" id="add_tags_link"><span class="glyphicon glyphicon-tags"></span> Add tags</a></li>
 
+           </ul>
+        </div>
+        <div class="add_tags col-xs-5 col-md-5 hide">
+            <form class="form-inline">
+               <div class="form-group">
+                     <input type="text" name="add_tags_input" placeholder="add tags here" class="form-control" />                    
+                </div>
+                <button class="btn btn-info">save</button>
+            </form>
+        </div>
+    </div>
+</div>
+ 
     <div class="row">
         {{ block('pagination') }}
     </div>
@@ -158,21 +185,71 @@
             });
             
             
-            $("select[name^=asin_options]").change(function() {
-                var id = $(this).data('id');
-                var val = $(this).val();
-                
-                $.post("{{ path('main_asin') }}", { 'id': id, 'asin': val }, function(data) {
-                    
-                })
+            $("select[name^=asin_options]").change(function() {              
+                updateASIN($(this));                          
             });
             
-              $("select[name^=show_items]").change(function() {
-                  $("#items_per_page").submit();
-              });
+            
+            $("input[name^=asin_options]").on('input', function() {                 
+                 updateASIN($(this));
+            });
+            
+            $("select[name^=show_items]").change(function() {
+                $("#items_per_page").submit();
+            });
+            
+            
+            $("#check_all").change(function() {
+                $(".checkbox_check").prop('checked', this.checked);
+            });
+            
+            // drop down menu items
+            
+            // hide tags when click on any menu
+            $(".dropdown-menu li a").click(function() {
+                 
+                $(".add_tags").addClass('hide');
+            });
+            
+            $("#add_tags_link").click(function() {                 
+                 
+                $addTags = $(".add_tags");
+                $addTags.removeClass('hide');
+                
+                if(!$addTags.find('.bootstrap-tagsinput'))
+                {
+                    $addTags.find('input').tagsinput();
+                }
+            });
         
         });
         
+        
+        function updateASIN($this) 
+        {
+              
+             var id = $this.data('id');
+             var val = $this.val();
+             
+             $.ajax(
+                        {
+                          url: "{{ path('main_asin') }}",
+                          data: { 'id': id, 'asin': val },
+                          success: function(data) {
+                                        $this.parent().find('.glyphicon-refresh').remove();                                        
+                                        $this.parent().append($("<span>").attr('class', 'glyphicon glyphicon-ok'));
+                                   },
+                          
+                          method: "POST",
+                          beforeSend: function() {
+                                $this.parent().find('.glyphicon-ok').remove();
+                                var $icon = $("<span>").addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate');                                        
+                                $this.parent().append($icon);                                        
+                          }
+                        }
+                       );
+            
+        }
          
 
     </script>

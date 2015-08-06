@@ -13,4 +13,10 @@
         </service>
     </services>
     -->
+    <services>
+        <service id="ebay_admin.update_amazon" class="Ebay\AdminBundle\Event\UpdateAmazonSubscriber">
+            <!-- <argument type="service" id="service_id" /> -->
+            <tag name="kernel.event_listener" event="update.amazon" method="onAmazonUpdate" />
+        </service>
+    </services>
 </container>

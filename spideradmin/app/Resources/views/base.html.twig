@@ -4,10 +4,16 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
-            {% stylesheets "bootstrap-sass/bootstrap-sass-3.3.5/assets/stylesheets/*" filter="scss" filter="uglifycss" filter="cssembed" %}
+            {% stylesheets 
+                "bootstrap-sass/bootstrap-sass-3.3.5/assets/stylesheets/*"
+                "source/sass/app.scss" 
+                filter="scss" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
-            {% stylesheets "source/less/tablesorter/*" filter="less" filter="uglifycss" filter="cssembed" %}
+            {% stylesheets 
+                 "source/less/tablesorter/*"
+                 "source/less/tagsinput/*"
+                filter="less" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
         {% endblock %}
@@ -15,11 +21,10 @@
         {% block head_javascripts %}
             
              {% javascripts
-                 "source/js/jquery-2.1.4.js"
+                 "source/js/jquery-2.1.4.js"              
                  "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap.min.js"
-                 "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap-sprockets.js"
-                 "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap/*"                 
                  "source/js/jquery.tablesorter.min.js"
+                 "source/js/bootstrap-tagsinput.js"
              filter="uglifyjs" %}
                 <script src="{{ asset_url }}"></script>
              {% endjavascripts %}

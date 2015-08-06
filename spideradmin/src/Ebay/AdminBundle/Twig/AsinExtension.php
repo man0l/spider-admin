@@ -51,15 +51,31 @@ class AsinExtension extends \Twig_Extension
             $asins[] = explode(",", $asin);
             foreach($asins[0] as $a)
             {
+                if(!empty($a) && $mainAsin == $a)
+                {
+                    $selected = "selected='selected'";
+                } else $selected = "";
                 
-                $output .= sprintf($format, $a);               
+                $output .= sprintf($format, $a, $selected);               
                 
             }
         } else {
-            $output .= sprintf($format, $asin);
+             if(!empty($asin) &&  $mainAsin == $asin)
+             {
+                    $selected = "selected='selected'";
+                    $output .= sprintf($format, $asin, $selected);
+
+             }  else {
+                 $output = sprintf('<input type="text" name="asin_options[]" value="%s" id="asin_options_%s" data-id="%1$s">', $mainAsin, $id);
+             }
+                
+            
         }
         
-        $output .= "</select>";
+        if(strpos('input', $output) !== false) 
+        {
+            $output .= "</select>";
+        }
         
         return $output;
     }

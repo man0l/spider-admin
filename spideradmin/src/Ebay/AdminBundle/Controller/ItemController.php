@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ebay\AdminBundle\Entity\Item;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Ebay\AdminBundle\Event\UpdateAmazonEvent;
+use Ebay\AdminBundle\Event\UpdateAmazonEvents;
 
 /**
  * Item controller.
@@ -186,6 +188,24 @@ class ItemController extends Controller
         $em->persist($item);
         $em->flush();
 
+        return new Response('[{"updated": true }]');
+    }
+    
+    /**
+     * @Route("/update-amazon", name="update_amazon")
+     */
+    public function updateAmazon(Request $request)
+    {
+        
+        $data = $request->get("check");
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $rep = $em->getRepository('EbayAdminBundle:Item');
+        
+        $items = $rep->findBy(array('id' => $data));
+        
+        $dispatcher = $this->container->get('event_dispatcher');
+        $dispatcher->dispatch(UpdateAmazonEvents::UPDATE_AMAZON, new UpdateAmazonEvent($items));
+        
         return new Response('[{"updated": true }]');
     }
     
