@@ -23,7 +23,8 @@
         "knplabs/knp-paginator-bundle": "~2.4.2",
         "knplabs/knp-menu-bundle":"~2",
         "twig/extensions": "^1.2",
-        "snc/redis-bundle": "^1.1"
+        "snc/redis-bundle": "^1.1",
+        "predis/predis": "1.0.*"
 
     },
     "require-dev": {

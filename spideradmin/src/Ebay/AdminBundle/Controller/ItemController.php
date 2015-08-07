@@ -198,10 +198,12 @@ class ItemController extends Controller
     {
         
         $data = $request->get("check");
+        
+      
         $em = $this->container->get('doctrine.orm.entity_manager');
         $rep = $em->getRepository('EbayAdminBundle:Item');
         
-        $items = $rep->findBy(array('id' => $data));
+        $items = $rep->findBy(array('id' => $data));         
         
         $dispatcher = $this->container->get('event_dispatcher');
         $dispatcher->dispatch(UpdateAmazonEvents::UPDATE_AMAZON, new UpdateAmazonEvent($items));

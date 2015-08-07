@@ -66,7 +66,7 @@ class AsinExtension extends \Twig_Extension
                     $output .= sprintf($format, $asin, $selected);
 
              }  else {
-                 $output = sprintf('<input type="text" name="asin_options[]" value="%s" id="asin_options_%s" data-id="%1$s">', $mainAsin, $id);
+                 $output = sprintf('<input type="text" name="asin_options[]" value="%s" id="asin_options_%s" data-id="%s">', $mainAsin, $id, $id);
              }
                 
             

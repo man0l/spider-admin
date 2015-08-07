@@ -15,8 +15,17 @@
     -->
     <services>
         <service id="ebay_admin.update_amazon" class="Ebay\AdminBundle\Event\UpdateAmazonSubscriber">
-            <!-- <argument type="service" id="service_id" /> -->
+            <!-- <argument type="service" id="service_id" /> -->                  
             <tag name="kernel.event_listener" event="update.amazon" method="onAmazonUpdate" />
+            <call method="setRedisKey">
+                <argument>%redis_spider_key%</argument>
+            </call>
+            <call method="setRedis">
+                <argument type="service" id="snc_redis.default" />
+            </call> 
+            <call method="setLogger">
+                <argument type="service" id="logger"></argument>
+            </call>           
         </service>
     </services>
 </container>

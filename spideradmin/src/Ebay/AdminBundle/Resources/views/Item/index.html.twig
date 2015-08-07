@@ -68,7 +68,7 @@
                 <tr {% if loop.index is odd %}class="odd"{% endif %}>
                     {# <td><a href="{{ path('admin_item_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
                     <td>
-                        <input name="check[]" id="check_{{ entity.id }}" class="checkbox_check" type="checkbox" value="{{ entity.id }}">
+                        <input name="check[]" id="check_{{ entity.id }}" class="checkbox_check {% if entity.main_asin == "" %}disabled{% endif %}" type="checkbox" value="{{ entity.id }}" {% if entity.main_asin == "" %}title="Please choose main ASIN first"{% endif %}>
                     </td>
                     <td>
                         <a href="{{entity.url}}" target="_blank">{{ entity.ebay_id }}</a>
