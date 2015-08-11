@@ -35,8 +35,10 @@ class ItemController extends Controller
         $itemsPerPage = 20;
         
         $sql = "           
-                SELECT i.*, COUNT(iss.id) as sold FROM item i 
+                SELECT i.*, COUNT(iss.id) as sold,  ai.price as amazon_price, ai.isFBA, ROUND((i.price - (i.price * 0.144) - 0.3) - ai.price, 2) as profit
+                FROM item i 
                 LEFT JOIN item_sold iss ON i.id = iss.item_id
+                LEFT JOIN amazon_item ai ON i.main_asin = ai.asin
             ";
         
         $where = array();
@@ -55,6 +57,7 @@ class ItemController extends Controller
             $having['sold'] = " sold > :sold";
             $params["sold"] = $request->query->get('sold');
         }
+        
         
         if($request->query->get('has_main_asin'))
         {
