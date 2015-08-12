@@ -1,0 +1,158 @@
+<?php
+
+namespace Ebay\AdminBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * AmazonItem
+ *
+ * @ORM\Table(name="amazon_item")
+ * @ORM\Entity
+ */
+class AmazonItem
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="text", nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="reviews", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $reviews;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="soldBy", type="string", length=255, nullable=true)
+     */
+    private $soldby;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFBA", type="boolean", nullable=true)
+     */
+    private $isfba;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $price;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="availability", type="string", length=255, nullable=true)
+     */
+    private $availability;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isInStock", type="boolean", nullable=true)
+     */
+    private $isinstock;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="shortDesc", type="text", nullable=true)
+     */
+    private $shortdesc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longDesc", type="text", nullable=true)
+     */
+    private $longdesc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longDescRaw", type="text", nullable=true)
+     */
+    private $longdescraw;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="asin", type="string", length=255, nullable=true)
+     */
+    private $asin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="upc", type="string", length=255, nullable=true)
+     */
+    private $upc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ean", type="string", length=255, nullable=true)
+     */
+    private $ean;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mpn", type="string", length=255, nullable=true)
+     */
+    private $mpn;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dimensions", type="string", length=255, nullable=true)
+     */
+    private $dimensions;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="reviewsNum", type="integer", nullable=true)
+     */
+    private $reviewsnum;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sellerRank", type="integer", nullable=true)
+     */
+    private $sellerrank;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+
+}

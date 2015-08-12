@@ -21,6 +21,10 @@ class Builder
         ));
  
 
+        $menu->addChild('Amazon Items', array(
+            'route' => 'admin_amazon_item'
+        ));
+        
         return $menu;
     }
     

@@ -8,13 +8,17 @@
 
         <div class="filter_form col-xs-8 col-md-9">
             <form action="{{ path('admin_item', app.request.query.all )}}" method="get" id="filter_form" class="form-inline" role="form">
-                <div class="form-group col-xs-1">
-                    <label for="price">price &gt;</label> <input type="number" placeholder="$100" size="50" name="price" class="form-control" step="0.1" value="{{ app.request.get('price') }}" />
+                <div class="form-group">
+                    <label for="price">price &gt;</label> <input type="number" placeholder="$100" name="price" class="form-control" step="0.1" value="{{ app.request.get('price') }}" />
                     
                 </div>
                     
-                <div class="form-group col-xs-1">
-                    <label for="sold">sold &gt; </label><input type="number" placeholder="20" name="sold" size="50" class="form-control"  value="{{ app.request.get('sold') }}" />
+                <div class="form-group">
+                    <label for="sold">sold &gt; </label> <input type="number" placeholder="20" name="sold" class="form-control"  value="{{ app.request.get('sold') }}" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="sold">profit &gt; </label> <input type="number" placeholder="5" name="profit" step="0.1" class="form-control"  value="{{ app.request.get('profit') }}" />
                 </div>
                 
                  
@@ -24,12 +28,13 @@
                 
                 <div class="checkbox">
                     <label><input type="checkbox" value="1" name="has_asin" {% if app.request.get('has_asin') %}checked="checked"{% endif %}> has asin</label>
-                </div>                
-              
+                </div>  
                 
                 <div class="checkbox">
-                    <label><input type="checkbox" value="1" name="has_profit" {% if app.request.get('has_amazon_price') %}checked="checked"{% endif %}> has profit</label>
+                    <label><input type="checkbox" value="1" name="has_profit" {% if app.request.get('has_profit') %}checked="checked"{% endif %}> has profit</label>
                 </div>
+                
+                
                 
                 
                 <input type="submit" name="submit_form" value="filter"  />

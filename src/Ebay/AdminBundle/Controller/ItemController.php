@@ -58,6 +58,12 @@ class ItemController extends Controller
             $params["sold"] = $request->query->get('sold');
         }
         
+        if($request->query->get('profit'))
+        {
+            $having['profit'] = " profit > :profit";
+            $params["profit"] = $request->query->get('profit');
+        }
+        
         
         if($request->query->get('has_main_asin'))
         {
@@ -68,6 +74,13 @@ class ItemController extends Controller
         {
             $where['has_asin'] ='i.ASIN != ""';
         }
+        
+        if($request->query->get('has_profit') && !$having['profit'])
+        {
+            $having['profit'] ='profit > 0';
+        }
+        
+        
         
         if(count($where) > 0)
         {

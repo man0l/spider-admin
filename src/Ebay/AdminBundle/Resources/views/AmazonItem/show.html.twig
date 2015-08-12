@@ -1,0 +1,98 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>AmazonItem</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ entity.title }}</td>
+            </tr>
+            <tr>
+                <th>Reviews</th>
+                <td>{{ entity.reviews }}</td>
+            </tr>
+            <tr>
+                <th>Soldby</th>
+                <td>{{ entity.soldby }}</td>
+            </tr>
+            <tr>
+                <th>Isfba</th>
+                <td>{{ entity.isfba }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ entity.price }}</td>
+            </tr>
+            <tr>
+                <th>Availability</th>
+                <td>{{ entity.availability }}</td>
+            </tr>
+            <tr>
+                <th>Isinstock</th>
+                <td>{{ entity.isinstock }}</td>
+            </tr>
+            <tr>
+                <th>Shortdesc</th>
+                <td>{{ entity.shortdesc }}</td>
+            </tr>
+            <tr>
+                <th>Longdesc</th>
+                <td>{{ entity.longdesc }}</td>
+            </tr>
+            <tr>
+                <th>Longdescraw</th>
+                <td>{{ entity.longdescraw }}</td>
+            </tr>
+            <tr>
+                <th>Asin</th>
+                <td>{{ entity.asin }}</td>
+            </tr>
+            <tr>
+                <th>Upc</th>
+                <td>{{ entity.upc }}</td>
+            </tr>
+            <tr>
+                <th>Ean</th>
+                <td>{{ entity.ean }}</td>
+            </tr>
+            <tr>
+                <th>Mpn</th>
+                <td>{{ entity.mpn }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions</th>
+                <td>{{ entity.dimensions }}</td>
+            </tr>
+            <tr>
+                <th>Reviewsnum</th>
+                <td>{{ entity.reviewsnum }}</td>
+            </tr>
+            <tr>
+                <th>Sellerrank</th>
+                <td>{{ entity.sellerrank }}</td>
+            </tr>
+            <tr>
+                <th>Updatedat</th>
+                <td>{{ entity.updatedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_amazon_item') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

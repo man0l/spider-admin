@@ -1,0 +1,74 @@
+<?php
+
+namespace Ebay\AdminBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * AmazonItemImages
+ *
+ * @ORM\Table(name="amazon_item_images", indexes={@ORM\Index(name="asin", columns={"asin"})})
+ * @ORM\Entity
+ */
+class AmazonItemImages
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="amazon_id", type="integer", nullable=false)
+     */
+    private $amazonId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="asin", type="string", length=255, nullable=false)
+     */
+    private $asin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
+     */
+    private $path;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image_url", type="string", length=255, nullable=false)
+     */
+    private $imageUrl;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="display_order", type="integer", nullable=false)
+     */
+    private $displayOrder = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+
+}

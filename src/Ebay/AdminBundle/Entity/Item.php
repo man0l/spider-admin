@@ -99,26 +99,26 @@ class Item
     private $createdAt;
 
     /**
+     * @var string
      *
-     * @var type 
      * @ORM\Column(name="image", type="text", nullable=true)
      */
     private $image;
-    
-   /**
-    *
-    * @var type 
-    * @ORM\Column(name="title", type="text", nullable=true)
-    */
-    private $title;
-    
+
     /**
+     * @var string
      *
-     * @var type 
+     * @ORM\Column(name="title", type="text", nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="main_asin", type="string", length=255, nullable=true)
      */
-    private $mainASIN;
-    
+    private $mainAsin;
+
 
 
     /**
@@ -431,25 +431,25 @@ class Item
     }
 
     /**
-     * Set mainASIN
+     * Set mainAsin
      *
-     * @param string $mainASIN
+     * @param string $mainAsin
      * @return Item
      */
-    public function setMainASIN($mainASIN)
+    public function setMainAsin($mainAsin)
     {
-        $this->mainASIN = $mainASIN;
+        $this->mainAsin = $mainAsin;
 
         return $this;
     }
 
     /**
-     * Get mainASIN
+     * Get mainAsin
      *
      * @return string 
      */
-    public function getMainASIN()
+    public function getMainAsin()
     {
-        return $this->mainASIN;
+        return $this->mainAsin;
     }
 }
