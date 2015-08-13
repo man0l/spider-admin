@@ -16,6 +16,13 @@
                 filter="less" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
+            
+            {% stylesheets 
+                "source/css/*" 
+                filter="uglifycss" filter="cssembed"
+            %}
+             <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
         {% endblock %}
         
         {% block head_javascripts %}
@@ -25,6 +32,8 @@
                  "bootstrap-sass/bootstrap-sass-3.3.5/assets/javascripts/bootstrap.min.js"
                  "source/js/jquery.tablesorter.min.js"
                  "source/js/bootstrap-tagsinput.js"
+                 "source/js/jquery-ui.min.js"
+                 "source/js/jquery.uploadifive.min.js"
              filter="uglifyjs" %}
                 <script src="{{ asset_url }}"></script>
              {% endjavascripts %}
