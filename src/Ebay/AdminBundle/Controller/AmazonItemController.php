@@ -9,6 +9,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ebay\AdminBundle\Entity\AmazonItem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Imagine\Imagick\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
+use Ebay\AdminBundle\Entity\AmazonItemImages;
 
 /**
  * AmazonItem controller.
@@ -74,22 +81,87 @@ class AmazonItemController extends Controller
     }
     
     /**
-     * @Route("upload-image", name="upload_image")
+     * @Route("/upload-image", name="upload_image_amazon")
      */
-    function uploadImageAction() {
+    function uploadImageAction(Request $request) {
         
+        
+        $file = $request->files->get('Filedata');
+        $rootDir = $this->container->getParameter('kernel.root_dir') . "/../web/";
+        $ext = $file->getExtension();
+        
+        if(!$ext)
+        {
+            $ext = $file->guessExtension();
+        }
+        
+        
+        $uploadPath = sprintf("%simages/full/", $rootDir);
+        $thumbPath = sprintf("%simages/thumbs/small/", $rootDir);
+        $fileName   = sprintf("%s.%s",  md5(time()), $ext);
+        
+        if($file->move($uploadPath, $fileName))
+        {
+            $imageine = new Imagine();
+            $image = $imageine->open($uploadPath.$fileName);
+            $image->resize(new Box(100, 100))->save($thumbPath.$fileName);
+     
+            
+        } else 
+        {
+            throw new FileException("The file could not be uploaded");
+        }
+        
+        
+        return new Response($fileName);
     }
     
     
     /**
-     * @Route("amazon-gallery/{id}", name="amazon_gallery")
+     * @Route("/save-images/", name="save_images")
      */
-    function galleryAction(Request $request, $id) 
+    function saveImagesAction(Request $request) 
     {
+       
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('EbayAdminBundle:AmazonItemImages');
-        $images = $repo->findBy(array('id' => $id));
+        $rep = $em->getRepository('EbayAdminBundle:AmazonItemImages');
+        $repItem = $em->getRepository('EbayAdminBundle:AmazonItem');
         
+        $amazonID = $request->request->get('item_id');
+        $item = $repItem->find($amazonID);
+        
+        $images = $rep->findBy(array('amazonId' => $amazonID ));
+        if($images)
+        {
+            foreach($images as $image)
+            {
+                $em->remove($image);
+                $em->flush();
+            }
+        }
+        
+        $newImages = $request->request->get('order');
+        
+        foreach($newImages as $order => $image)
+        {
+            $image = sprintf("full/%s", $image);
+            
+            $im = new AmazonItemImages();
+            $im->setAmazonId($amazonID);
+            $im->setAsin($item->getAsin());
+            $im->setPath($image);
+            $im->setDisplayOrder($order);
+            $im->setUpdatedAt(new \Datetime('now'));
+            $im->setCreatedAt(new \Datetime('now'));
+            
+            
+            $em->persist($im);
+        }
+        
+        $em->flush();
+        
+        
+        return new Response();
     }
 
    

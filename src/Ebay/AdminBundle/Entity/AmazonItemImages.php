@@ -45,7 +45,7 @@ class AmazonItemImages
     /**
      * @var string
      *
-     * @ORM\Column(name="image_url", type="string", length=255, nullable=false)
+     * @ORM\Column(name="image_url", type="string", length=255, nullable=true)
      */
     private $imageUrl;
 

@@ -49,7 +49,7 @@
                     <td>{{ entity.title }}</td>
                     <td> {{ entity.shortDesc | raw | striptags | truncate(200) }}</td>
                     <td> {# <a href="{{ path('amazon_gallery', with: { 'id': entity.id } ) }}">open gallery</a> #}
-                        <a href="javascript:;" data-images="{{ entity.images_list }}" class="bootstrap_modal_images">show images</a>
+                        <a href="javascript:;" data-images="{{ entity.images_list }}" data-id="{{ entity.id }}"  class="bootstrap_modal_images">show images</a>
                     </td>
                     <td>{{ entity.upc }}</td>
                     <td>{% if entity.mpn %}MPN: {{ entity.mpn }} {% endif %} <br />                        
@@ -117,12 +117,17 @@
             <div class="modal-body"><div class="te"></div></div>
             <div class="modal-footer">
                 
-                <form>
-                    <div id="queue"></div>
-                    <input id="file_upload" name="file_upload" type="file" multiple="true">
-                    <a style="position: relative; top: 8px;" href="javascript:$('#file_upload').uploadifive('upload')">Upload Images</a>
-                </form>
-                
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-8">
+                        <form>
+                            <div id="queue"></div>
+                            <input id="file_upload" name="file_upload" type="file" multiple="true">
+                            
+                        </form>
+                    </div>
+                </div>
+                <input type="hidden" value="" name="item_id" id="itemIDmodal">
+                <button type="button" class="btn btn-info" id="save_images_item">Save Images</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                  
             </div>
@@ -139,7 +144,13 @@
 {% block javascripts %} 
     <script type="text/javascript">
         
+        var imagePathFull = "{{ asset("images/full/") }}";
+        var imagePathThumb = "{{ asset("images/thumbs/small/") }}";
+        var saveImagesUrl = "{{ path('save_images') }}";
+        
         $(document).ready(function(){
+            
+
             
             
            
@@ -187,9 +198,16 @@
             
             $(".bootstrap_modal_images").click(function() {
                 
-                var imagePathFull = "{{ asset("images/full/") }}";
-                var imagePathThumb = "{{ asset("images/thumbs/small/") }}";
+                var icon = $("#save_images_item span");
+                if(icon)
+                {
+                    $(icon).remove();                    
+                }
+                
                 var images = $(this).data('images').split(",");
+                var itemID = $(this).data('id');
+                $("#itemIDmodal").val(itemID);
+                
                 var row = $("<div>").addClass("row").addClass('grid');
                 
                 if (images.length > 0)
@@ -200,17 +218,8 @@
                   
                     for ( img in images)
                     {
-                         var imContainer = $("<div>").attr('class', "col-lg-3 col-sm-3 col-xs-4 tile");
-                         var closeContainer = $("<div>").attr('class', 'image-border');
-                         var close = $("<button>").text('x').attr('class',"close");
-                         var clearFix = $("<div>").addClass("clearfix");
-                         closeContainer.append(close);
-                         closeContainer.append(clearFix);
-                         var im = $("<img>").attr('src', imagePathThumb + images[img] ).attr("class", 'thumbnail img-responsive');
-                         closeContainer.append(im);
-                         imContainer.append(closeContainer);
-                         row.append(imContainer);
-                         
+                        
+                         addImages(row, images[img], imagePathThumb);
                          $modalBody.append(row);
                     }
                     
@@ -229,20 +238,76 @@
                 
                 
             });
+            
+            
+            $("#save_images_item").click(function() {
+                
+                // preloader 
+                var $icon = $("<span>").addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate');                                        
+                $("#save_images_item").append($icon);                                        
+                         
+                // get all images in the same order
+                $modalBody = $("#myModal").find(".modal-body");
+                var images = $modalBody.find('.row img');
+               
+             
+                var postData = "";
+                var imgs = [];
+                
+                images.each(function(i, image) {
+                    
+                    postData += "order[]="+$(image).data('image')+"&";
+                    imgs.push($(image).data('image'));
+                });
+                
+                itemID =  $("#itemIDmodal").val();
+                postData += "item_id=" + itemID;
+                
+                
+                $.post(saveImagesUrl, postData, function() {
+                     $("#myModal").modal('toggle');
+                     
+                     var row =  $("#container_checkbox a[data-id="+itemID+"]");                     
+                     row.data('images', imgs.join(","));
+             
+                });
+                
+            });
         
         });
         
+
+        // global namespace
+        var addImages = function(appendToObject, image, imagePathThumb)
+        {
+            var imContainer = $("<div>").attr('class', "col-lg-3 col-sm-3 col-xs-4 tile");
+            var closeContainer = $("<div>").attr('class', 'image-border');
+            var close = $("<button>").text('x').attr('class',"close");
+            var clearFix = $("<div>").addClass("clearfix");
+            closeContainer.append(close);
+            closeContainer.append(clearFix);
+            var im = $("<img>").attr('src', imagePathThumb + image ).attr("class", 'thumbnail img-responsive').data('image', image);
+            closeContainer.append(im);
+            imContainer.append(closeContainer);
+            appendToObject.append(imContainer);
+        }
+        
+        
         $(function() {
             $('#file_upload').uploadifive({
-                    'auto'             : false,
+                    'auto'             : true,
                      //'checkScript'      : 'check-exists.php',
                     'formData'         : {
                                             'timestamp' : '{{ timestamp }}',
                                             'token'     : '{{ hash }}'
                                          },
                     'queueID'          : 'queue',
-                    'uploadScript'     : '{{ path('upload_image') }}',
-                    'onUploadComplete' : function(file, data) { console.log(data); }
+                    'uploadScript'     : '{{ path('upload_image_amazon') }}',
+                    'onUploadComplete' : function(file, data) { 
+                                             
+                                               addImages($(".modal-body").find('.row'), data, imagePathThumb);
+                                               
+                                         }
             });
         });
       
