@@ -163,6 +163,53 @@ class AmazonItemController extends Controller
         
         return new Response();
     }
+    
+    
+    /**
+     * @Route("/save-description", name="save_description")
+     */
+    function saveAction(Request $request) 
+    {
+        $html = $request->request->get('html');
+        $id   = $request->request->get('id');
+        
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('EbayAdminBundle:AmazonItem');
+        
+        $entity = $rep->find($id);
+        if($entity)
+        {
+            $entity->setDescription($html);
+            $em->persist($entity);
+            $em->flush();
+        }
+        
+        
+        return new Response;
+    }
+    
+    /**
+     * @Route("/save-title", name="save_title")
+     */
+    function saveTitleAction(Request $request) 
+    {
+        $html = $request->request->get('value');
+        $id   = $request->request->get('pk');
+        
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('EbayAdminBundle:AmazonItem');
+        
+        $entity = $rep->find($id);
+        if($entity)
+        {
+            $entity->setTitle($html);
+            $em->persist($entity);
+            $em->flush();
+        }
+        
+        
+        return new Response($html);
+    }
 
    
 }

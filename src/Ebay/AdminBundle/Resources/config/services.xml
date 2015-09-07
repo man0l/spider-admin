@@ -27,5 +27,6 @@
                 <argument type="service" id="logger"></argument>
             </call>           
         </service>
+        <service id="ebay_admin.api_ebay" class="Ebay\AdminBundle\Api\EbaySession"></service>
     </services>
 </container>

@@ -90,6 +90,14 @@ class AmazonItem
      * @ORM\Column(name="longDescRaw", type="text", nullable=true)
      */
     private $longdescraw;
+    
+    /**
+     *
+     * @var type 
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+            
 
     /**
      * @var string
@@ -154,5 +162,453 @@ class AmazonItem
      */
     private $createdAt;
 
+    
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return AmazonItem
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set reviews
+     *
+     * @param float $reviews
+     * @return AmazonItem
+     */
+    public function setReviews($reviews)
+    {
+        $this->reviews = $reviews;
+
+        return $this;
+    }
+
+    /**
+     * Get reviews
+     *
+     * @return float 
+     */
+    public function getReviews()
+    {
+        return $this->reviews;
+    }
+
+    /**
+     * Set soldby
+     *
+     * @param string $soldby
+     * @return AmazonItem
+     */
+    public function setSoldby($soldby)
+    {
+        $this->soldby = $soldby;
+
+        return $this;
+    }
+
+    /**
+     * Get soldby
+     *
+     * @return string 
+     */
+    public function getSoldby()
+    {
+        return $this->soldby;
+    }
+
+    /**
+     * Set isfba
+     *
+     * @param boolean $isfba
+     * @return AmazonItem
+     */
+    public function setIsfba($isfba)
+    {
+        $this->isfba = $isfba;
+
+        return $this;
+    }
+
+    /**
+     * Get isfba
+     *
+     * @return boolean 
+     */
+    public function getIsfba()
+    {
+        return $this->isfba;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     * @return AmazonItem
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float 
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set availability
+     *
+     * @param string $availability
+     * @return AmazonItem
+     */
+    public function setAvailability($availability)
+    {
+        $this->availability = $availability;
+
+        return $this;
+    }
+
+    /**
+     * Get availability
+     *
+     * @return string 
+     */
+    public function getAvailability()
+    {
+        return $this->availability;
+    }
+
+    /**
+     * Set isinstock
+     *
+     * @param boolean $isinstock
+     * @return AmazonItem
+     */
+    public function setIsinstock($isinstock)
+    {
+        $this->isinstock = $isinstock;
+
+        return $this;
+    }
+
+    /**
+     * Get isinstock
+     *
+     * @return boolean 
+     */
+    public function getIsinstock()
+    {
+        return $this->isinstock;
+    }
+
+    /**
+     * Set shortdesc
+     *
+     * @param string $shortdesc
+     * @return AmazonItem
+     */
+    public function setShortdesc($shortdesc)
+    {
+        $this->shortdesc = $shortdesc;
+
+        return $this;
+    }
+
+    /**
+     * Get shortdesc
+     *
+     * @return string 
+     */
+    public function getShortdesc()
+    {
+        return $this->shortdesc;
+    }
+
+    /**
+     * Set longdesc
+     *
+     * @param string $longdesc
+     * @return AmazonItem
+     */
+    public function setLongdesc($longdesc)
+    {
+        $this->longdesc = $longdesc;
+
+        return $this;
+    }
+
+    /**
+     * Get longdesc
+     *
+     * @return string 
+     */
+    public function getLongdesc()
+    {
+        return $this->longdesc;
+    }
+
+    /**
+     * Set longdescraw
+     *
+     * @param string $longdescraw
+     * @return AmazonItem
+     */
+    public function setLongdescraw($longdescraw)
+    {
+        $this->longdescraw = $longdescraw;
+
+        return $this;
+    }
+
+    /**
+     * Get longdescraw
+     *
+     * @return string 
+     */
+    public function getLongdescraw()
+    {
+        return $this->longdescraw;
+    }
+
+    /**
+     * Set asin
+     *
+     * @param string $asin
+     * @return AmazonItem
+     */
+    public function setAsin($asin)
+    {
+        $this->asin = $asin;
+
+        return $this;
+    }
+
+    /**
+     * Get asin
+     *
+     * @return string 
+     */
+    public function getAsin()
+    {
+        return $this->asin;
+    }
+
+    /**
+     * Set upc
+     *
+     * @param string $upc
+     * @return AmazonItem
+     */
+    public function setUpc($upc)
+    {
+        $this->upc = $upc;
+
+        return $this;
+    }
+
+    /**
+     * Get upc
+     *
+     * @return string 
+     */
+    public function getUpc()
+    {
+        return $this->upc;
+    }
+
+    /**
+     * Set ean
+     *
+     * @param string $ean
+     * @return AmazonItem
+     */
+    public function setEan($ean)
+    {
+        $this->ean = $ean;
+
+        return $this;
+    }
+
+    /**
+     * Get ean
+     *
+     * @return string 
+     */
+    public function getEan()
+    {
+        return $this->ean;
+    }
+
+    /**
+     * Set mpn
+     *
+     * @param string $mpn
+     * @return AmazonItem
+     */
+    public function setMpn($mpn)
+    {
+        $this->mpn = $mpn;
+
+        return $this;
+    }
+
+    /**
+     * Get mpn
+     *
+     * @return string 
+     */
+    public function getMpn()
+    {
+        return $this->mpn;
+    }
+
+    /**
+     * Set dimensions
+     *
+     * @param string $dimensions
+     * @return AmazonItem
+     */
+    public function setDimensions($dimensions)
+    {
+        $this->dimensions = $dimensions;
+
+        return $this;
+    }
+
+    /**
+     * Get dimensions
+     *
+     * @return string 
+     */
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * Set reviewsnum
+     *
+     * @param integer $reviewsnum
+     * @return AmazonItem
+     */
+    public function setReviewsnum($reviewsnum)
+    {
+        $this->reviewsnum = $reviewsnum;
+
+        return $this;
+    }
+
+    /**
+     * Get reviewsnum
+     *
+     * @return integer 
+     */
+    public function getReviewsnum()
+    {
+        return $this->reviewsnum;
+    }
+
+    /**
+     * Set sellerrank
+     *
+     * @param integer $sellerrank
+     * @return AmazonItem
+     */
+    public function setSellerrank($sellerrank)
+    {
+        $this->sellerrank = $sellerrank;
+
+        return $this;
+    }
+
+    /**
+     * Get sellerrank
+     *
+     * @return integer 
+     */
+    public function getSellerrank()
+    {
+        return $this->sellerrank;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return AmazonItem
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return AmazonItem
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 }

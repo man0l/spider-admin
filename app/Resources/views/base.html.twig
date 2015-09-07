@@ -12,7 +12,7 @@
             {% endstylesheets %}
             {% stylesheets 
                  "source/less/tablesorter/*"
-                 "source/less/tagsinput/*"
+                 "source/less/tagsinput/*"                 
                 filter="less" filter="uglifycss" filter="cssembed" %}
                  <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
@@ -34,6 +34,10 @@
                  "source/js/bootstrap-tagsinput.js"
                  "source/js/jquery-ui.min.js"
                  "source/js/jquery.uploadifive.min.js"
+                 "assets/vendor/bootstrap-wysiwyg/external/jquery.hotkeys.js"
+                 "assets/vendor/bootstrap-wysiwyg/external/google-code-prettify/prettify.js"
+                 "assets/vendor/bootstrap-wysiwyg/bootstrap-wysiwyg.js"
+                 "source/js/bootstrap-editable.min.js"
              filter="uglifyjs" %}
                 <script src="{{ asset_url }}"></script>
              {% endjavascripts %}

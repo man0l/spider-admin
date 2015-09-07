@@ -90,6 +90,14 @@ class AmazonItem
      * @ORM\Column(name="longDescRaw", type="text", nullable=true)
      */
     private $longdescraw;
+    
+    /**
+     *
+     * @var type 
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+            
 
     /**
      * @var string
@@ -154,6 +162,7 @@ class AmazonItem
      */
     private $createdAt;
 
+    
 
 
     /**
@@ -601,5 +610,28 @@ class AmazonItem
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return AmazonItem
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

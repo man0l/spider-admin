@@ -46,8 +46,12 @@
                     <td>
                         <input name="check[]" id="check_{{ entity.id }}" class="checkbox_check {% if entity.asin == "" %}disabled{% endif %}" type="checkbox" value="{{ entity.id }}" {% if entity.asin == "" %}title="Please choose main ASIN first"{% endif %}>
                     </td>
-                    <td>{{ entity.title }}</td>
-                    <td> {{ entity.shortDesc | raw | striptags | truncate(200) }}</td>
+                    <td>
+                        <div class="title_editable" name="title" value="{{ entity.title }}" data-type="textarea" data-pk="{{ entity.id }}" data-url="{{ path('save_title') }}">{{ entity.title }}</div>
+                    </td>
+                    <td> {{ entity.description | raw | striptags | truncate(100) }}
+                        <a href="javascript:;" class="edit_description" data-id="{{ entity.id }}" data-text="{{ entity.shortDesc ~ entity.longDesc | raw }}" >edit</a>
+                    </td>
                     <td> {# <a href="{{ path('amazon_gallery', with: { 'id': entity.id } ) }}">open gallery</a> #}
                         <a href="javascript:;" data-images="{{ entity.images_list }}" data-id="{{ entity.id }}"  class="bootstrap_modal_images">show images</a>
                     </td>
@@ -83,8 +87,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-               <li><a href="javascript:;" id="update_amazon"><span class="glyphicon glyphicon-bitcoin"></span> Update Amazon Price &amp; Info</a></li>
-               <li><a href="javascript:;"><span class="glyphicon glyphicon-export"></span> Export in FileExchange</a></li>
+               <li><a href="javascript:;" id="export_file_exchange"><span class="glyphicon glyphicon-export"></span> Export in FileExchange</a></li>
                <li><a href="javascript:;"><span class="glyphicon glyphicon-export"></span> Export in Bonanza</a></li>
                <li><a href="javascript:;" id="add_tags_link"><span class="glyphicon glyphicon-tags"></span> Add tags</a></li>
 
@@ -105,7 +108,7 @@
         {{ block('pagination') }}
     </div>
 
-        <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,9 +117,9 @@
                  <h4 class="modal-title"></h4>
 
             </div>
-            <div class="modal-body"><div class="te"></div></div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
-                
+               
                 <div class="row">
                     <div class="col-lg-4 col-sm-6 col-xs-8">
                         <form>
@@ -128,6 +131,7 @@
                 </div>
                 <input type="hidden" value="" name="item_id" id="itemIDmodal">
                 <button type="button" class="btn btn-info" id="save_images_item">Save Images</button>
+               
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                  
             </div>
@@ -137,7 +141,100 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+{% block html_modal %}
+<!-- Modal -->
+<div class="modal fade" id="modal_edit_html" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title"></h4>
+
+            </div>
+            <div class="modal-body">
+                {{ block("editor_functions") }}
+            </div>
+            <div class="modal-footer">          
+                <input type="hidden" value="" name="item_id" id="description_item_id">
+                <button type="button" class="btn btn-info" id="save_description">Save Description</button>               
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+{% endblock %}
+
+
+
+ 
         
+{% endblock %}
+
+
+{% block editor_functions %}
+    <!-- modal edit HTML --->
+    <div class="buttons_container">
+                   <div id="alerts"></div>
+                    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                      <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="glyphicon glyphicon-font"></i><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                          </ul>
+                        </div>
+                      <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="glyphicon glyphicon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                          </ul>
+                      </div>
+                      <div class="btn-group">
+                        <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="glyphicon glyphicon-bold"></i></a>
+                        <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="glyphicon glyphicon-italic"></i></a>
+                        <!-- <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="glyphicon glyphicon-strikethrough"></i></a>
+                        <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="glyphicon glyphicon-underline"></i></a>
+                        -->
+                      </div>
+                      <div class="btn-group">
+                        <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="glyphicon glyphicon-list"></i></a>
+                        <!-- <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="glyphicon glyphicon-list-ol"></i></a>-->
+                        <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="glyphicon glyphicon-indent-left"></i></a>
+                        <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="glyphicon glyphicon-indent-right"></i></a>
+                      </div>
+                      <div class="btn-group">
+                        <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="glyphicon glyphicon-align-left"></i></a>
+                        <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="glyphicon glyphicon-align-center"></i></a>
+                        <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="glyphicon glyphicon-align-right"></i></a>
+                        <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="glyphicon glyphicon-align-justify"></i></a>
+                      </div>
+                      <div class="btn-group">
+                                  <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="glyphicon glyphicon-link"></i></a>
+                                    <div class="dropdown-menu input-append">
+                                            <input class="span2" placeholder="URL" type="text" data-edit="createLink"/>
+                                            <button class="btn" type="button">Add</button>
+                        </div>
+                        <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="glyphicon glyphicon-remove"></i></a>
+
+                      </div>
+                      <!-- 
+                      <div class="btn-group">
+                        <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="glyphicon glyphicon-picture"></i></a>
+                        <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+                      </div>
+                      -->
+                      <div class="btn-group">
+                        <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="glyphicon glyphicon-undo"></i></a>
+                        <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="glyphicon glyphicon-repeat"></i></a>
+                      </div>
+                       
+                    </div>
+    </div>
 {% endblock %}
     
     
@@ -147,6 +244,7 @@
         var imagePathFull = "{{ asset("images/full/") }}";
         var imagePathThumb = "{{ asset("images/thumbs/small/") }}";
         var saveImagesUrl = "{{ path('save_images') }}";
+        var saveDescriptionUrl = "{{ path('save_description') }}";
         
         $(document).ready(function(){
             
@@ -273,6 +371,55 @@
                 });
                 
             });
+            
+            $(".edit_description").click(function() {
+                
+                $modalBody = $("#modal_edit_html").find(".modal-body");
+                $("#description_item_id").attr('value', $(this).data('id'));
+                
+                var divContainer = $modalBody.find('.editor');
+                
+                if(divContainer.length === 0) {                    
+                    
+                    var divContainer = $("<div>").addClass("editor"); 
+                    divContainer.empty();                
+                    divContainer.html($(this).data('text'));
+                    $modalBody.append(divContainer);
+                    divContainer.wysiwyg();
+                    
+                } else {
+                    divContainer.empty();                
+                    divContainer.html($(this).data('text'));  
+                }           
+                
+                
+                $("#modal_edit_html").modal('show');
+                
+            });
+            
+            
+            $("#save_description").click(function() {
+                
+                var $icon = $("<span>").addClass('glyphicon glyphicon-refresh glyphicon-refresh-animate'); 
+                $this = $(this);
+                $this.append($icon);         
+                
+                var html = $(".editor").cleanHtml();
+                var itemID = $("#description_item_id").val();
+                
+                $.post(saveDescriptionUrl, { html: html, id: itemID }, function() {
+                    $this.find('span').remove();
+                    $this.data('text', html);
+                    $("#modal_edit_html").modal('hide');
+                });
+                
+                
+            });
+            
+            
+            $("#export_file_exchange").click(function() {
+                
+            });
         
         });
         
@@ -309,6 +456,9 @@
                                                
                                          }
             });
+            
+            $.fn.editable.defaults.mode = 'inline';
+            $(".title_editable").editable({ showbuttons: true, rows: 3 });
         });
       
          

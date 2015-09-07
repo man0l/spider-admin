@@ -1,0 +1,23 @@
+{
+  "name": "spider-admin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/man0l/spider-admin",
+  "authors": [
+    "Manol Trendafilov <manol.trendafilov@gmail.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-wysiwyg": "*"
+  }
+}
