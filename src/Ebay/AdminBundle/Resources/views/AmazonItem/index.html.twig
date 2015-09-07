@@ -67,7 +67,7 @@
                     <td>{{ entity.reviews | default(0) }}</td>
                     
                     {# <td>{{ entity.category }}</td> #}
-                    <td>{{ entity.asin }}</td>
+                    <td><a href="http://amazon.com/dp/{{ entity.asin }}" target="_blank">{{ entity.asin }}</td>
                     <td>{% if entity.created_at %}{{ entity.created_at|date('Y-m-d H:i:s') }}{% endif %}</td>
                     
                 </tr>
