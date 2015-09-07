@@ -432,6 +432,11 @@
             var close = $("<button>").text('x').attr('class',"close");
             var clearFix = $("<div>").addClass("clearfix");
             closeContainer.append(close);
+            
+            close.on('click', function(){
+                imContainer.remove();
+            });
+            
             closeContainer.append(clearFix);
             var im = $("<img>").attr('src', imagePathThumb + image ).attr("class", 'thumbnail img-responsive').data('image', image);
             closeContainer.append(im);
