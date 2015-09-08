@@ -99,12 +99,34 @@ class AmazonItemController extends Controller
         $uploadPath = sprintf("%simages/full/", $rootDir);
         $thumbPath = sprintf("%simages/thumbs/small/", $rootDir);
         $fileName   = sprintf("%s.%s",  md5(time()), $ext);
-        
+        $width = 100;
+        $height = 100;
+
         if($file->move($uploadPath, $fileName))
         {
             $imageine = new Imagine();
             $image = $imageine->open($uploadPath.$fileName);
-            $image->resize(new Box(100, 100))->save($thumbPath.$fileName);
+            
+            $boxSize = $image->getSize();
+            
+            if($boxSize->getWidth() > $boxSize->getHeight())
+            {
+                $destWidth  = $width;
+                $destHeight = $boxSize->getHeight() * ($height / $boxSize->getWidth());
+
+            } else if($boxSize->getWidth() > $boxSize->getHeight())
+            {
+                $destWidth  = $boxSize->getWidth() * ($width / $boxSize->getHeight());
+                $destHeight = $height;
+
+            } else if($boxSize->getWidth() == $boxSize->getHeight())
+            {
+                $destWidth = $width;
+                $destHeight = $height;                          
+            }
+            
+            $image->resize(new Box($destWidth, $destHeight))->save($thumbPath.$fileName);
+            //$image->resize(new Box(100, 100))->save($thumbPath.$fileName);
      
             
         } else 
