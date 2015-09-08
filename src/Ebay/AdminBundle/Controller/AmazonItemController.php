@@ -109,22 +109,25 @@ class AmazonItemController extends Controller
             $image = $imageine->open($uploadPath.$fileName);
             
             $boxSize = $image->getSize();
-            
+
             if($boxSize->getWidth() > $boxSize->getHeight())
             {
                 $destWidth  = $width;
                 $destHeight = $boxSize->getHeight() * ($height / $boxSize->getWidth());
+                
 
-            } else if($boxSize->getWidth() > $boxSize->getHeight())
+            } else if($boxSize->getWidth() < $boxSize->getHeight())
             {
                 $destWidth  = $boxSize->getWidth() * ($width / $boxSize->getHeight());
                 $destHeight = $height;
+                
 
             } else if($boxSize->getWidth() == $boxSize->getHeight())
             {
                 $destWidth = $width;
-                $destHeight = $height;                          
-            }
+                $destHeight = $height;     
+                 
+            }             
             
             $image->resize(new Box($destWidth, $destHeight))->save($thumbPath.$fileName);
             //$image->resize(new Box(100, 100))->save($thumbPath.$fileName);
