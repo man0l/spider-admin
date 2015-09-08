@@ -95,10 +95,13 @@ class AmazonItemController extends Controller
             $ext = $file->guessExtension();
         }
         
+        $fileName = str_replace(" ", "_", $file->getClientOriginalName());
+         
+        
         
         $uploadPath = sprintf("%simages/full/", $rootDir);
         $thumbPath = sprintf("%simages/thumbs/small/", $rootDir);
-        $fileName   = sprintf("%s.%s",  md5(time()), $ext);
+        //$fileName   = sprintf("%s.%s",  md5(time()), $ext);
         $width = 100;
         $height = 100;
         $destWidth = $destHeight = 0;
