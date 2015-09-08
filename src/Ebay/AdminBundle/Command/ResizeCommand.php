@@ -46,7 +46,7 @@ class ResizeCommand extends ContainerAwareCommand
                 
                 $boxSize = $image->getSize();
                 
-                print_r($boxSize);
+                print_r($boxSize);exit;
                  
                 if($boxSize->getWidth() > $boxSize->getHeight())
                 {
