@@ -101,6 +101,7 @@ class AmazonItemController extends Controller
         $fileName   = sprintf("%s.%s",  md5(time()), $ext);
         $width = 100;
         $height = 100;
+        $destWidth = $destHeight = 0;
 
         if($file->move($uploadPath, $fileName))
         {
