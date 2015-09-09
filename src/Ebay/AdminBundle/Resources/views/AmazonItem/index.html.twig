@@ -454,11 +454,12 @@
                                             'token'     : '{{ hash }}'
                                          },
                     'queueID'          : 'queue',
+                    'removeCompleted' : true,
                     'uploadScript'     : '{{ path('upload_image_amazon') }}',
                     'onUploadComplete' : function(file, data) { 
                                              
                                                addImages($(".modal-body").find('.row'), data, imagePathThumb);
-                                               $('#file_upload').uploadifive('clearQueue');
+                                                
                                          }
             });
             
