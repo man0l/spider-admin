@@ -39,7 +39,7 @@ class AmazonItemController extends Controller
         $conn = $em->getConnection();        
        
         $sql = "
-                SELECT ai.*, count(distinct iis.id) AS sold, group_concat(DISTINCT REPLACE(aii.path, 'full/', '')) AS images_list, ROUND((i.price - (i.price * 0.144) - 0.3) - ai.price, 2) AS profit
+                SELECT ai.*, i.title as ebay_title, i.ebay_id, count(distinct iis.id) AS sold, group_concat(DISTINCT REPLACE(aii.path, 'full/', '')) AS images_list, ROUND((i.price - (i.price * 0.144) - 0.3) - ai.price, 2) AS profit
                 FROM amazon_item ai
                 LEFT JOIN amazon_item_images aii ON ai.id = aii.amazon_id
                 INNER JOIN item i ON ai.asin = i.main_asin
