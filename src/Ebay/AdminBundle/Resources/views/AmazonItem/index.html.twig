@@ -458,7 +458,7 @@
                     'onUploadComplete' : function(file, data) { 
                                              
                                                addImages($(".modal-body").find('.row'), data, imagePathThumb);
-                                               
+                                               $('#file_upload').uploadifive('clearQueue');
                                          }
             });
             
