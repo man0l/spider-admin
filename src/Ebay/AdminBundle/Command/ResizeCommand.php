@@ -42,6 +42,9 @@ class ResizeCommand extends ContainerAwareCommand
                 $path = $im->getPath();
                 $newPath = str_replace("full/", "", $im->getPath());
                 $imageine = new Imagine();
+                
+                $output->writeln($path);
+                
                 $image = $imageine->open($rootDir.$path);
                 
                 $boxSize = $image->getSize();
