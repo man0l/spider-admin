@@ -133,7 +133,7 @@ class ExportCommand extends ContainerAwareCommand
                     $imgs = explode(";", $result['images_list']);
                     foreach($imgs as $image)
                     {
-                        if(file_exists($imageDir.$image)) 
+                        if(file_exists($imageDir.$image) && (filesize($imageDir.$image) > 0)) 
                         {
                             $output->writeln($image); 
                             $response = $this->sendRequest($imageDir.$image, "UploadSiteHostedPictures");
