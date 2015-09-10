@@ -163,7 +163,7 @@ class ExportCommand extends ContainerAwareCommand
                     $result['upc'] or 'Does not apply', // twice, because of the C:UPC 
                     $result['mpn'] or 'Does not apply',                    
                     '',
-                    sprintf("%s",implode("|", $imageList)),
+                    sprintf("%s",implode("|", $imagesList)),
                     1,
                     '',
                     $result['price'], // startPrice
