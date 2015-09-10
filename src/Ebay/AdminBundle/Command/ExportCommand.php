@@ -133,19 +133,22 @@ class ExportCommand extends ContainerAwareCommand
                     $imgs = explode(";", $result['images_list']);
                     foreach($imgs as $image)
                     {
-                        $output->writeln($image); 
-                        $response = $this->sendRequest($imageDir.$image, "UploadSiteHostedPictures");
-                        
-                        $output->writeln(var_dump($response));
-                        
-                        if(!stristr($response, 'HTTP 404') || $response !== '')
+                        if(file_exists($imageDir.$image)) 
                         {
-                            $respXmlObj = simplexml_load_string($response);  
-                            $ack        = $respXmlObj->Ack;
-                            $picNameOut = $respXmlObj->SiteHostedPictureDetails->PictureName;
-                            $picURL     = $respXmlObj->SiteHostedPictureDetails->FullURL;
-                            
-                            $imagesList[] = $picURL;
+                            $output->writeln($image); 
+                            $response = $this->sendRequest($imageDir.$image, "UploadSiteHostedPictures");
+
+                            $output->writeln(var_dump($response));
+
+                            if(!stristr($response, 'HTTP 404') || $response !== '')
+                            {
+                                $respXmlObj = simplexml_load_string($response);  
+                                $ack        = $respXmlObj->Ack;
+                                $picNameOut = $respXmlObj->SiteHostedPictureDetails->PictureName;
+                                $picURL     = $respXmlObj->SiteHostedPictureDetails->FullURL;
+
+                                $imagesList[] = $picURL;
+                            }
                         }
 
                     }
