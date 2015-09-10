@@ -145,12 +145,10 @@ class ExportCommand extends ContainerAwareCommand
                             $picNameOut = $respXmlObj->SiteHostedPictureDetails->PictureName;
                             $picURL     = $respXmlObj->SiteHostedPictureDetails->FullURL;
                             
-                            $imageList[] = $picURL;
+                            $imagesList[] = $picURL;
                         }
 
                     }
-                } else {
-                    $imagesList = array();
                 }
                
                 // export csv
