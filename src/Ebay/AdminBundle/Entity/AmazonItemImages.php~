@@ -54,7 +54,7 @@ class AmazonItemImages
      * @var type 
      * @ORM\Column(name="is_resized", type="boolean", nullable=true, options={"default" = 0})
      */
-    private $isResised;
+    private $isResized;
 
     /**
      * @var integer

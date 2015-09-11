@@ -272,4 +272,27 @@ class AmazonItemImages
     {
         return $this->isResised;
     }
+
+    /**
+     * Set isResized
+     *
+     * @param boolean $isResized
+     * @return AmazonItemImages
+     */
+    public function setIsResized($isResized)
+    {
+        $this->isResized = $isResized;
+
+        return $this;
+    }
+
+    /**
+     * Get isResized
+     *
+     * @return boolean 
+     */
+    public function getIsResized()
+    {
+        return $this->isResized;
+    }
 }
