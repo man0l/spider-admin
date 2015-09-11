@@ -161,10 +161,10 @@ class ExportCommand extends ContainerAwareCommand
                     preg_replace("/\n?\r?/", "", $result['title']),
                     '',
                     sprintf('%s',$result['description']),
-                    $result['brand'] or 'Does not apply',
-                    $result['upc'] or 'Does not apply', // Product:UPC
-                    $result['upc'] or 'Does not apply', // twice, because of the C:UPC 
-                    $result['mpn'] or 'Does not apply',                    
+                    $result['brand'] ?: 'Does not apply',
+                    $result['upc'] ?: 'Does not apply', // Product:UPC
+                    $result['upc'] ?: 'Does not apply', // twice, because of the C:UPC 
+                    $result['mpn'] ?: 'Does not apply',                    
                     '',
                     sprintf("%s",implode("|", $imagesList)),
                     1,
