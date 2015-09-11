@@ -48,6 +48,13 @@ class AmazonItemImages
      * @ORM\Column(name="image_url", type="string", length=255, nullable=true)
      */
     private $imageUrl;
+    
+    /**
+     *
+     * @var type 
+     * @ORM\Column(name="is_resized", type="boolean", nullable=true, options={"default" = 0})
+     */
+    private $isResised;
 
     /**
      * @var integer
@@ -241,5 +248,28 @@ class AmazonItemImages
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set isResised
+     *
+     * @param boolean $isResised
+     * @return AmazonItemImages
+     */
+    public function setIsResised($isResised)
+    {
+        $this->isResised = $isResised;
+
+        return $this;
+    }
+
+    /**
+     * Get isResised
+     *
+     * @return boolean 
+     */
+    public function getIsResised()
+    {
+        return $this->isResised;
     }
 }
