@@ -127,8 +127,6 @@ class ExportCommand extends ContainerAwareCommand
             
             $stmt->execute();
             $results = $stmt->fetchAll();
-            
-            print_r($results);
 
             $header = "*Action(SiteID=US|Country=US|Currency=USD|Version=745);*Category;*Title;Subtitle;*Description;C:Brand;Product:UPC;C:UPC;C:MPN;*ConditionID=1000;PicURL;*Quantity;*Format=FixedPrice;*StartPrice;UseTaxTable=1;BuyItNowPrice;*Duration=30;ImmediatePayRequired;*Location=90001;GalleryType;PayPalAccepted=1;PayPalEmailAddress=manol.trendafilov@gmail.com;PaymentInstructions;StoreCategory;ShippingDiscountProfileID;DomesticRateTable;ShippingType=Flat;ShippingService-1:FreeShipping=1;ShippingService-1:Option=ShippingMethodStandard;ShippingService-1:Cost;ShippingService-1:Priority;ShippingService-1:ShippingSurcharge;ShippingService-2:Option;ShippingService-2:Cost;ShippingService-2:Priority;ShippingService-2:ShippingSurcharge;GlobalShipping=0;DispatchTimeMax=2;CustomLabel;ReturnsAcceptedOption=ReturnsAccepted;RefundOption=MoneyBackOrReplacement;RestockingFeeValueOption=NoRestockingFee;ReturnsWithinOption=Days_30;ShippingCostPaidByOption=Seller;AdditionalDetails;ShippingProfileName;ReturnProfileName;PaymentProfileName\r\n";
             
