@@ -22,7 +22,8 @@ class ExportCommand extends ContainerAwareCommand
     {
         $this
                 ->setName('bot:export')
-                ->setDescription('Export the items in FileExchange')                
+                ->setDescription('Export the items in FileExchange')     
+                ->addArgument('date', InputOption::VALUE_REQUIRED, "Export Date Parameter")
                 ;
                 
                 
@@ -93,6 +94,10 @@ class ExportCommand extends ContainerAwareCommand
     
     function execute(InputInterface $input, OutputInterface $output) {
         
+            $date = $input->getArgument('date');
+            $dateParam = new \DateTime(date('Y-m-d',strtotime($date)));
+                    
+            
             $this->initSession();
             
             $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
@@ -109,14 +114,21 @@ class ExportCommand extends ContainerAwareCommand
                     FROM amazon_item ai
                     LEFT JOIN amazon_item_images aii ON ai.id = aii.amazon_id
                     INNER JOIN item i ON ai.asin = i.main_asin
-                    LEFT JOIN item_sold iis ON i.id = iis.item_id               
+                    LEFT JOIN item_sold iis ON i.id = iis.item_id
+                    WHERE ai.created_at > :created_at
                 ";
+            
+            
 
             $sql .= " GROUP BY  ai.id";
             
-            $stmt = $conn->prepare($sql);        
+            $stmt = $conn->prepare($sql);   
+            $stmt->bindValue('created_at', $dateParam->format('Y-m-d'));
+            
             $stmt->execute();
             $results = $stmt->fetchAll();
+            
+            print_r($results);
 
             $header = "*Action(SiteID=US|Country=US|Currency=USD|Version=745);*Category;*Title;Subtitle;*Description;C:Brand;Product:UPC;C:UPC;C:MPN;*ConditionID=1000;PicURL;*Quantity;*Format=FixedPrice;*StartPrice;UseTaxTable=1;BuyItNowPrice;*Duration=30;ImmediatePayRequired;*Location=90001;GalleryType;PayPalAccepted=1;PayPalEmailAddress=manol.trendafilov@gmail.com;PaymentInstructions;StoreCategory;ShippingDiscountProfileID;DomesticRateTable;ShippingType=Flat;ShippingService-1:FreeShipping=1;ShippingService-1:Option=ShippingMethodStandard;ShippingService-1:Cost;ShippingService-1:Priority;ShippingService-1:ShippingSurcharge;ShippingService-2:Option;ShippingService-2:Cost;ShippingService-2:Priority;ShippingService-2:ShippingSurcharge;GlobalShipping=0;DispatchTimeMax=2;CustomLabel;ReturnsAcceptedOption=ReturnsAccepted;RefundOption=MoneyBackOrReplacement;RestockingFeeValueOption=NoRestockingFee;ReturnsWithinOption=Days_30;ShippingCostPaidByOption=Seller;AdditionalDetails;ShippingProfileName;ReturnProfileName;PaymentProfileName\r\n";
             
@@ -131,6 +143,18 @@ class ExportCommand extends ContainerAwareCommand
                 if($result['images_list'])
                 {
                     $imgs = explode(";", $result['images_list']);
+                    // check for 12 images, copy them until the number become 12
+                    
+                    $size = count($imgs);
+                    
+                    if($size < 12)
+                    {
+                        for($i = 0; $i < 12 - $size; $i++)
+                        {
+                           $imgs[] = $imgs[$i];
+                        }
+                    }
+                     
                     foreach($imgs as $image)
                     {
                         if(file_exists($imageDir.$image) && (filesize($imageDir.$image) > 0)) 
