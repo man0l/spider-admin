@@ -23,7 +23,9 @@ class ExportCommand extends ContainerAwareCommand
         $this
                 ->setName('bot:export')
                 ->setDescription('Export the items in FileExchange')     
-                ->addArgument('date', InputOption::VALUE_REQUIRED, "Export Date Parameter")
+                ->addArgument('date', InputOption::VALUE_REQUIRED, "Export Date Parameter Start")
+                ->addArgument('date_end', InputOption::VALUE_OPTIONAL, "Export Date Parameter End")    
+                ->addArgument('limit', InputOption::VALUE_OPTIONAL, 'Limit')
                 ;
                 
                 
@@ -95,8 +97,10 @@ class ExportCommand extends ContainerAwareCommand
     function execute(InputInterface $input, OutputInterface $output) {
         
             $date = $input->getArgument('date');
-            $dateParam = new \DateTime(date('Y-m-d',strtotime($date)));
-                    
+            $dateEnd = $input->getArgument('date_end');
+            $dateParam = new \DateTime(date('Y-m-d H:i:s',strtotime($date)));
+            $dateEndParam = new \DateTime(date('Y-m-d H:i:s',strtotime($dateEnd)));
+            $limitParam = intval($input->getArgument('limit'));
             
             $this->initSession();
             
@@ -115,16 +119,27 @@ class ExportCommand extends ContainerAwareCommand
                     LEFT JOIN amazon_item_images aii ON ai.id = aii.amazon_id
                     INNER JOIN item i ON ai.asin = i.main_asin
                     LEFT JOIN item_sold iis ON i.id = iis.item_id
-                    WHERE ai.created_at > :created_at
+                    WHERE ai.created_at > :created_at AND ai.created_at < :created_at_end
                 ";
             
+            if($limitParam > 0)
+            {
+                $sql .= " LIMIT 0, :limit";
+            }
             
 
             $sql .= " GROUP BY  ai.id";
             
             $stmt = $conn->prepare($sql);   
-            $stmt->bindValue('created_at', $dateParam->format('Y-m-d'));
+            $stmt->bindValue('created_at', $dateParam->format('Y-m-d H:i:s'));
+            $stmt->bindValue("created_at_end", $dateEndParam->format('Y-m-d H:i:s'));
             
+              
+            if($limitParam > 0)
+            {
+                $stmt->bindValue("limit", $limitParam);
+            }
+
             $stmt->execute();
             $results = $stmt->fetchAll();
 
@@ -182,7 +197,7 @@ class ExportCommand extends ContainerAwareCommand
                     $result['category'],
                     preg_replace("/\n?\r?/", "", $result['title']),
                     '',
-                    sprintf('%s',$result['description']),
+                    trim(preg_replace('/\s+/', ' ', $result['description'])),
                     $result['brand'] ?: 'Does not apply',
                     $result['upc'] ?: 'Does not apply', // Product:UPC
                     $result['upc'] ?: 'Does not apply', // twice, because of the C:UPC 
