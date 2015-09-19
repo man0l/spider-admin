@@ -24,80 +24,17 @@ class ExportCommand extends ContainerAwareCommand
                 ->setName('bot:export')
                 ->setDescription('Export the items in FileExchange')     
                 ->addArgument('date', InputOption::VALUE_REQUIRED, "Export Date Parameter Start")
-                ->addArgument('date_end', InputOption::VALUE_OPTIONAL, "Export Date Parameter End")    
+                ->addArgument('date_end', InputOption::VALUE_REQUIRED, "Export Date Parameter End")    
                 ->addArgument('limit', InputOption::VALUE_OPTIONAL, 'Limit')
-                ;
+                ;            
                 
-                
-    }
-    
-    function initSession()
-    {
-            $devID = 'c5b7973e-8d76-4142-9fca-9e997ac8b5fd';
-            $appID = 'Trakink60-c128-49e7-ac40-3f4452ee717';
-            $certID = 'a508490a-ae05-4081-aedf-9199b7254402';
-
-            //the token representing the eBay user to assign the call with
-            //$userToken = 'AgAAAA**AQAAAA**aAAAAA**HMPEVA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkIumDZmFpwWdj6x9nY+seQ**2ZUCAA**AAMAAA**kXFksVKw9qZq5l9cvvPxXj0P9uxv3REiSjluFKpZ1xRl3PUMuI05HHZvvNqboZ24ygy0O6UUB2vKHaf7g5/o6Pitnr+eT61QzQX0ae9hDuPNocL9+N8SsGZmo8fCVlIIImEWE08Vj99WMCIQSpNpRyRHmxyKub59wOrv1M5JT2BOpp+szDmk7vlEFHRuD0wTSs9/uhqlLhNGmkdzmD4kb1bxNEaaCgJENQLwiyuKJqMf+0OtxOjc4dVN5vz/PcBfccT7fOytr237hNgUkRvWyjx8zkZAplmdkbMHe8bQnhWgDLt9hNI21Ljh8IL3hCfbsb1GXkC1Fp0uu7lFz0U2k+khrxGRplg4UYi3Zlus0oDwXCODxUw9uz/XPab6A52v8sIzsNoj8tAqkpAXFY13mRbH7M2diuGAAmwBWSUUagtyfJOYJ6w85qQ1S6k1qhlLQmWYKOSd2L7sf+k7bx42d27GmjhEV/4BWo1eVdKwl2xKy9g8CJPStjVazdz1Qs9ndWknRCvjTI4R1muwF/YVsCQE/KkHsqdhq5rszRreJeUXZSL1aGBLKFxeqrsCkXhJUohAwa64hLgywXJLVTr38GwiM8QZO4ATFskxYM0CoSAjGOTmSZ4U4rpc3CQaBS3hZgPnxIPv1M8+/ED6EADrv7EgCoDEDdhw7drmW4tfv6wW4a0ivI1+9q5APcwvckHijETzkRhPDwROib6K7mWcUfpg52KPcOnbuVNRmsPr/iPnwN0Xb25HeGgNzX4xwXBP';
-
-            $siteID  = 0;                            // siteID needed in request - US=0, UK=3, DE=77...
-            $verb    = 'UploadSiteHostedPictures';   // the call being made:
-            $version = 933;                          // eBay API version
-            $boundary = "MIME_boundary";
-            
-            $this->ebaySession = new eBaySession($this->userToken, $devID, $appID, $certID, false, $this->version, $siteID, $this->verb, $boundary);
-            
-    }
-    
-    function sendRequest($filePath) 
-    {
-        if(!$this->ebaySession)
-            throw new \Exception('The eBaySession is not set');        
-        
-        $file = $filePath;
-        $picNameIn = 'my_pic';
-        $handle = fopen($file,'r');         // do a binary read of image
-        $multiPartImageData = fread($handle,filesize($file));
-        fclose($handle);
-
-        ///Build the request XML request which is first part of multi-part POST
-        $xmlReq = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-        $xmlReq .= '<' . $this->verb . 'Request xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
-        $xmlReq .= "<Version>{$this->version}</Version>\n";
-        $xmlReq .= "<PictureName>$picNameIn</PictureName>\n";    
-        $xmlReq .= "<RequesterCredentials><eBayAuthToken>{$this->userToken}</eBayAuthToken></RequesterCredentials>\n";
-        $xmlReq .= '</' . $this->verb . 'Request>';
-
-        $boundary = "MIME_boundary";
-        $CRLF = "\r\n";
-
-        // The complete POST consists of an XML request plus the binary image separated by boundaries
-        $firstPart   = '';
-        $firstPart  .= "--" . $boundary . $CRLF;
-        $firstPart  .= 'Content-Disposition: form-data; name="XML Payload"' . $CRLF;
-        $firstPart  .= 'Content-Type: text/xml;charset=utf-8' . $CRLF . $CRLF;
-        $firstPart  .= $xmlReq;
-        $firstPart  .= $CRLF;
-
-        
-        $secondPart = "--" . $boundary . $CRLF;
-        $secondPart .= 'Content-Disposition: form-data; name="dummy"; filename="dummy"' . $CRLF;
-        $secondPart .= "Content-Transfer-Encoding: binary" . $CRLF;
-        $secondPart .= "Content-Type: application/octet-stream" . $CRLF . $CRLF;
-        $secondPart .= $multiPartImageData;
-        $secondPart .= $CRLF;
-        $secondPart .= "--" . $boundary . "--" . $CRLF;
-
-        $fullPost = $firstPart . $secondPart;
-      
-        return $this->ebaySession->sendHttpRequest($fullPost);
-
-    }
+    }   
     
     function execute(InputInterface $input, OutputInterface $output) {
         
             $date = $input->getArgument('date');
             $dateEnd = $input->getArgument('date_end');
+
             $dateParam = new \DateTime(date('Y-m-d H:i:s',strtotime($date)));
             $dateEndParam = new \DateTime(date('Y-m-d H:i:s',strtotime($dateEnd)));
             $limitParam = intval($input->getArgument('limit'));
@@ -122,22 +59,24 @@ class ExportCommand extends ContainerAwareCommand
                     WHERE ai.created_at > :created_at AND ai.created_at < :created_at_end
                 ";
             
-            if($limitParam > 0)
-            {
-                $sql .= " LIMIT 0, :limit";
-            }
+           
             
 
             $sql .= " GROUP BY  ai.id";
+            
+             if(isset($limitParam) && $limitParam > 0)
+            {
+                $sql .= " LIMIT :limit";
+            }
             
             $stmt = $conn->prepare($sql);   
             $stmt->bindValue('created_at', $dateParam->format('Y-m-d H:i:s'));
             $stmt->bindValue("created_at_end", $dateEndParam->format('Y-m-d H:i:s'));
             
               
-            if($limitParam > 0)
+            if(isset($limitParam) && $limitParam > 0)
             {
-                $stmt->bindValue("limit", $limitParam);
+                $stmt->bindValue("limit", $limitParam, \PDO::PARAM_INT);
             }
 
             $stmt->execute();
@@ -244,5 +183,68 @@ class ExportCommand extends ContainerAwareCommand
                 ), ";");
             }
             
+    }
+    
+     function initSession()
+    {
+            $devID = 'c5b7973e-8d76-4142-9fca-9e997ac8b5fd';
+            $appID = 'Trakink60-c128-49e7-ac40-3f4452ee717';
+            $certID = 'a508490a-ae05-4081-aedf-9199b7254402';
+
+            //the token representing the eBay user to assign the call with
+            //$userToken = 'AgAAAA**AQAAAA**aAAAAA**HMPEVA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkIumDZmFpwWdj6x9nY+seQ**2ZUCAA**AAMAAA**kXFksVKw9qZq5l9cvvPxXj0P9uxv3REiSjluFKpZ1xRl3PUMuI05HHZvvNqboZ24ygy0O6UUB2vKHaf7g5/o6Pitnr+eT61QzQX0ae9hDuPNocL9+N8SsGZmo8fCVlIIImEWE08Vj99WMCIQSpNpRyRHmxyKub59wOrv1M5JT2BOpp+szDmk7vlEFHRuD0wTSs9/uhqlLhNGmkdzmD4kb1bxNEaaCgJENQLwiyuKJqMf+0OtxOjc4dVN5vz/PcBfccT7fOytr237hNgUkRvWyjx8zkZAplmdkbMHe8bQnhWgDLt9hNI21Ljh8IL3hCfbsb1GXkC1Fp0uu7lFz0U2k+khrxGRplg4UYi3Zlus0oDwXCODxUw9uz/XPab6A52v8sIzsNoj8tAqkpAXFY13mRbH7M2diuGAAmwBWSUUagtyfJOYJ6w85qQ1S6k1qhlLQmWYKOSd2L7sf+k7bx42d27GmjhEV/4BWo1eVdKwl2xKy9g8CJPStjVazdz1Qs9ndWknRCvjTI4R1muwF/YVsCQE/KkHsqdhq5rszRreJeUXZSL1aGBLKFxeqrsCkXhJUohAwa64hLgywXJLVTr38GwiM8QZO4ATFskxYM0CoSAjGOTmSZ4U4rpc3CQaBS3hZgPnxIPv1M8+/ED6EADrv7EgCoDEDdhw7drmW4tfv6wW4a0ivI1+9q5APcwvckHijETzkRhPDwROib6K7mWcUfpg52KPcOnbuVNRmsPr/iPnwN0Xb25HeGgNzX4xwXBP';
+
+            $siteID  = 0;                            // siteID needed in request - US=0, UK=3, DE=77...
+            $verb    = 'UploadSiteHostedPictures';   // the call being made:
+            $version = 933;                          // eBay API version
+            $boundary = "MIME_boundary";
+            
+            $this->ebaySession = new eBaySession($this->userToken, $devID, $appID, $certID, false, $this->version, $siteID, $this->verb, $boundary);
+            
+    }
+    
+    function sendRequest($filePath) 
+    {
+        if(!$this->ebaySession)
+            throw new \Exception('The eBaySession is not set');        
+        
+        $file = $filePath;
+        $picNameIn = 'my_pic';
+        $handle = fopen($file,'r');         // do a binary read of image
+        $multiPartImageData = fread($handle,filesize($file));
+        fclose($handle);
+
+        ///Build the request XML request which is first part of multi-part POST
+        $xmlReq = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+        $xmlReq .= '<' . $this->verb . 'Request xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+        $xmlReq .= "<Version>{$this->version}</Version>\n";
+        $xmlReq .= "<PictureName>$picNameIn</PictureName>\n";    
+        $xmlReq .= "<RequesterCredentials><eBayAuthToken>{$this->userToken}</eBayAuthToken></RequesterCredentials>\n";
+        $xmlReq .= '</' . $this->verb . 'Request>';
+
+        $boundary = "MIME_boundary";
+        $CRLF = "\r\n";
+
+        // The complete POST consists of an XML request plus the binary image separated by boundaries
+        $firstPart   = '';
+        $firstPart  .= "--" . $boundary . $CRLF;
+        $firstPart  .= 'Content-Disposition: form-data; name="XML Payload"' . $CRLF;
+        $firstPart  .= 'Content-Type: text/xml;charset=utf-8' . $CRLF . $CRLF;
+        $firstPart  .= $xmlReq;
+        $firstPart  .= $CRLF;
+
+        
+        $secondPart = "--" . $boundary . $CRLF;
+        $secondPart .= 'Content-Disposition: form-data; name="dummy"; filename="dummy"' . $CRLF;
+        $secondPart .= "Content-Transfer-Encoding: binary" . $CRLF;
+        $secondPart .= "Content-Type: application/octet-stream" . $CRLF . $CRLF;
+        $secondPart .= $multiPartImageData;
+        $secondPart .= $CRLF;
+        $secondPart .= "--" . $boundary . "--" . $CRLF;
+
+        $fullPost = $firstPart . $secondPart;
+      
+        return $this->ebaySession->sendHttpRequest($fullPost);
+
     }
 }
