@@ -29,8 +29,13 @@ class ResizeCommand extends ContainerAwareCommand
             $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
             $rep = $em->getRepository("EbayAdminBundle:AmazonItemImages");
             //$images = $rep->findAll();
-            $images = $rep->findBy(array('isResized' => null), array(), 50);
+            //$images = $rep->findBy(array('isResized' => null), array(), 50);
             
+            $qb = $rep->createQueryBuilder('i');
+            $qb->where($qb->expr()->isNull('i.isResized'));
+            
+            $images = $qb->getQuery()->getResult();
+          
             
             $rootDir = $this->getContainer()->getParameter('kernel.root_dir') . "/../web/images/";
             $thumbPath = $rootDir ."resized/";
