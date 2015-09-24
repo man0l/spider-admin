@@ -130,6 +130,7 @@ class ExportCommand extends ContainerAwareCommand
                     }
                 }
                
+                $finalPrice = floatval($result['price']) * 0.155 + 0.3;
                 // export csv
                 fputcsv($fp, array(
                     "VerifyAdd",
@@ -145,7 +146,7 @@ class ExportCommand extends ContainerAwareCommand
                     sprintf("%s",implode("|", $imagesList)),
                     1,
                     '',
-                    $result['price'], // startPrice
+                    $finalPrice, // startPrice
                     '',
                     '', //$result['price'], // buyNowPrice
                     '',
