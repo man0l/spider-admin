@@ -47,7 +47,10 @@
                     <td>
                         <input name="check[]" id="check_{{ entity.id }}" class="checkbox_check {% if entity.asin == "" %}disabled{% endif %}" type="checkbox" value="{{ entity.id }}" {% if entity.asin == "" %}title="Please choose main ASIN first"{% endif %}>
                     </td>
-                    <td> {{ entity.ebay_title }}  <a href="http://www.ebay.com/itm/{{ entity.ebay_id }}" target="_blank">{{ entity.ebay_id }}</a></td>
+                    <td> {{ entity.ebay_title }}
+                         {% if entity.image %}<img src="{{ asset('images/' ~ entity.image) }}" width="25%" />{% endif %}
+
+                        <a href="http://www.ebay.com/itm/{{ entity.ebay_id }}" target="_blank">{{ entity.ebay_id }}</a></td>
                     <td>
                         <div class="title_editable" name="title" value="{{ entity.title }}" data-type="textarea" data-pk="{{ entity.id }}" data-url="{{ path('save_title') }}">{{ entity.title }}</div>
                     </td>
@@ -62,7 +65,7 @@
                         {% if entity.ean %}EAN: {{ entity.ean }} {% endif %}
                     </td>
                     
-                    <td>${{ entity.sold | default(0) }}</td>
+                    <td>{{ entity.sold | default(0) }}</td>
 
                     <td>${{ entity.profit | default(0) }}</td>                    
                     <td>{{ entity.reviewsNum | default(0) }}</td>                    
